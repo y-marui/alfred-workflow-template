@@ -1,4 +1,4 @@
-# alfred-workflow-template
+# Alfred Workflow Template
 
 > **これは日本語版（正本）です。**
 > 英語版（参照）は [README.md](README.md) を参照してください。
@@ -6,7 +6,7 @@
 > Alfred 5 Script Filter ワークフローのプロダクションレディなテンプレート。
 > 10分で開発を開始できます。
 
-[![CI](https://github.com/yourname/alfred-workflow-template/actions/workflows/ci.yml/badge.svg)](https://github.com/yourname/alfred-workflow-template/actions/workflows/ci.yml)
+[![CI](https://github.com/y-marui/alfred-workflow-template/actions/workflows/ci.yml/badge.svg)](https://github.com/y-marui/alfred-workflow-template/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 | 項目 | 内容 |

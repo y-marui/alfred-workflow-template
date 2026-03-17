@@ -1,4 +1,4 @@
-# alfred-workflow-template
+# Alfred Workflow Template
 
 > **This is the English (reference) version.**
 > For the Japanese canonical version, see [README-jp.md](README-jp.md).
@@ -6,7 +6,7 @@
 > Production-ready template for building Alfred 5 Script Filter workflows.
 > Start shipping in 10 minutes.
 
-[![CI](https://github.com/yourname/alfred-workflow-template/actions/workflows/ci.yml/badge.svg)](https://github.com/yourname/alfred-workflow-template/actions/workflows/ci.yml)
+[![CI](https://github.com/y-marui/alfred-workflow-template/actions/workflows/ci.yml/badge.svg)](https://github.com/y-marui/alfred-workflow-template/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 | Field | Value |
