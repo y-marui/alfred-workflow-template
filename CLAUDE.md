@@ -1,6 +1,8 @@
 # CLAUDE.md — Alfred Workflow Template
 
-This file provides Claude Code with context for developing this Alfred Workflow.
+> **For full project context and dev-charter policies, read `AI_CONTEXT.md` first.**
+
+This file provides Claude Code with quick-access context for developing this Alfred Workflow.
 
 ## Project overview
 
@@ -83,6 +85,27 @@ git push --tags
 
 | Tool | Use for |
 |---|---|
-| Claude Code | New features, refactoring, test suites, architecture |
-| GitHub Copilot | Inline bug fixes, boilerplate completion |
-| Gemini CLI | README, CHANGELOG, usage docs generation |
+| Claude Code | Project setup, large-scale changes, architecture, refactoring |
+| GitHub Copilot | Bug fixes, small implementation, unit test authoring |
+| Gemini CLI | Docs (README, CHANGELOG, usage.md, store descriptions) |
+
+When using multiple AI tools simultaneously, treat Copilot suggestions as
+reference only during Claude Code sessions — do not accept blindly.
+
+## Pre-coding checklist
+
+Before starting work, confirm if any of these are unclear:
+
+- Goal / completion criteria
+- Language / framework / version constraints
+- New code vs existing code modification
+- Whether tests are required
+- Scope of impact
+
+Do **not** ask about code style, file placement, or minor implementation
+details — follow existing patterns in the codebase.
+
+## Error handling stance
+
+When an error occurs: **diagnose root cause → explain fix plan → implement**.
+Never retry the same failing command. Never skip hooks (`--no-verify`).

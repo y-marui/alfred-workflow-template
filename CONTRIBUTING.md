@@ -37,7 +37,12 @@ make build
 - Type hints required on all public functions
 - Keep runtime dependencies minimal (they're vendored)
 
-## Commit messages
+## Commit guidelines
+
+- Commit per **feature unit**, after confirming it works.
+- **No WIP commits** — do not commit code that does not run.
+
+### Commit message format
 
 Follow [Conventional Commits](https://www.conventionalcommits.org/):
 

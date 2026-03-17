@@ -25,3 +25,14 @@ This is a workflow template. Common areas of concern:
   must not be interpolated into shell commands or SQL without sanitization.
 - **Dependency security** — vendored packages in `workflow/vendor/` should be
   kept up-to-date; dependabot monitors `.github/workflows/` automatically.
+
+## Automated security checks
+
+| Hook | What it detects |
+|---|---|
+| `gitleaks` (`.gitleaks.toml`) | Hardcoded secrets, API keys, local absolute paths |
+| `detect-private-key` | SSH/TLS private key headers |
+| `no-commit-dotenv` | `.env` files accidentally staged |
+| `check-added-large-files` | Files over 500 KB |
+
+These hooks run on every commit (pre-commit) and in CI (`security` job).

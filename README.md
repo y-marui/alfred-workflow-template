@@ -1,5 +1,8 @@
 # alfred-workflow-template
 
+> **This is the English (reference) version.**
+> For the Japanese canonical version, see [README-jp.md](README-jp.md).
+
 > Production-ready template for building Alfred 5 Script Filter workflows.
 > Start shipping in 10 minutes.
 
@@ -14,7 +17,7 @@
 - **Full test suite** — pytest, no Alfred required to run tests
 - **CI/CD** — lint, test, build, and release via GitHub Actions
 - **Vendor packaging** — third-party deps bundled in `vendor/`
-- **AI-ready** — `CLAUDE.md` for Claude Code context
+- **AI-ready** — `AI_CONTEXT.md` + `CLAUDE.md` for AI assistant context
 
 ## Installation
 
@@ -83,6 +86,13 @@ Alfred → entry.py → safe_run → core → router → commands → services �
 3. Update the workflow name in `pyproject.toml`
 4. Update shortcuts in `src/app/commands/open_cmd.py`
 5. Add your `workflow/icon.png`
+
+## Support
+
+If this template saves you time, support is appreciated.
+
+- [Buy Me a Coffee](https://www.buymeacoffee.com/y.marui)
+- [GitHub Sponsors](https://github.com/sponsors/y-marui)
 
 ## License
 

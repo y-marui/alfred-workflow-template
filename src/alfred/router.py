@@ -16,7 +16,6 @@ from __future__ import annotations
 
 from typing import Callable
 
-# Handler signature: (args: str) -> None
 Handler = Callable[[str], None]
 
 

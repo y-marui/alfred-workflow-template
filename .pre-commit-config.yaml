@@ -7,7 +7,7 @@ repos:
         args: [--fix]
       - id: ruff-format
 
-  # General file hygiene
+  # General file hygiene + security basics
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
     hooks:
@@ -19,6 +19,7 @@ repos:
       - id: check-merge-conflict
       - id: check-added-large-files
         args: [--maxkb=500]
+      - id: detect-private-key
 
   # Shell script linting
   - repo: https://github.com/shellcheck-py/shellcheck-py
@@ -27,17 +28,14 @@ repos:
       - id: shellcheck
         files: scripts/.*\.sh$
 
-  # Secret scanning
+  # Secret scanning — uses .gitleaks.toml for project-specific rules
   - repo: https://github.com/gitleaks/gitleaks
     rev: v8.18.4
     hooks:
       - id: gitleaks
+        args: [--config=.gitleaks.toml]
 
-  # Detect private keys and block .env files from being committed
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0
-    hooks:
-      - id: detect-private-key
+  # Block .env files from being committed
   - repo: local
     hooks:
       - id: no-commit-dotenv
