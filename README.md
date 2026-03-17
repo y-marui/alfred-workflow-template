@@ -9,21 +9,29 @@
 [![CI](https://github.com/yourname/alfred-workflow-template/actions/workflows/ci.yml/badge.svg)](https://github.com/yourname/alfred-workflow-template/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
+| Field | Value |
+|---|---|
+| Target | Alfred 5 Script Filter workflow |
+| Team size | Individual to small team (1–3 people) |
+| Language | English (OSS) |
+| Runtime | Python 3.9+, Alfred 5 |
+| AI tools | Claude Code / GitHub Copilot / Gemini CLI |
+
 ## Features
 
-- **Layered architecture** — Alfred boundary isolated from business logic
-- **Lightweight Alfred SDK** — response builder, router, cache, config, logger
-- **Command-based UX** — `wf search`, `wf open`, `wf config`, `wf help`
-- **Full test suite** — pytest, no Alfred required to run tests
-- **CI/CD** — lint, test, build, and release via GitHub Actions
-- **Vendor packaging** — third-party deps bundled in `vendor/`
-- **AI-ready** — `AI_CONTEXT.md` + `CLAUDE.md` for AI assistant context
+- ✅ **Layered architecture** — Alfred boundary isolated from business logic
+- ✅ **Lightweight Alfred SDK** — response builder, router, cache, config, logger
+- ✅ **Command-based UX** — `wf search`, `wf open`, `wf config`, `wf help`
+- ✅ **Full test suite** — pytest, no Alfred required to run tests
+- ✅ **CI/CD** — lint, test, build, and release via GitHub Actions
+- ✅ **Vendor packaging** — third-party deps bundled in `vendor/`
+- ✅ **AI-ready** — `AI_CONTEXT.md` + `CLAUDE.md` for AI assistant context
 
-## Installation
+## Requirements
 
-> **End users:** Download the latest `.alfredworkflow` from the
-> [Releases page](https://github.com/yourname/alfred-workflow-template/releases),
-> then double-click the file to install it in Alfred.
+- Alfred 5 (Powerpack required for Script Filter)
+- Python 3.9+
+- [pre-commit](https://pre-commit.com/) (for security hooks)
 
 ## Quick Start (developers)
 
@@ -58,23 +66,38 @@ wf config            view / reset settings
 wf help              show all commands
 ```
 
-See [docs/usage.md](docs/usage.md) for full documentation.
-
-## Development
-
-See [docs/development.md](docs/development.md) for:
-- Adding new commands
-- Adding third-party dependencies
-- Local testing workflow
-- Release process
-
-## Architecture
-
-See [docs/architecture.md](docs/architecture.md) for the full design.
+## Project Structure
 
 ```
-Alfred → entry.py → safe_run → core → router → commands → services → clients
+alfred-workflow-template/
+├── src/
+│   ├── alfred/         # Alfred SDK (response, router, cache, config, logger, safe_run)
+│   └── app/            # Application layer (commands, services, clients)
+├── workflow/           # Alfred package (info.plist, scripts/entry.py, vendor/)
+├── tests/              # pytest test suite
+├── scripts/            # build.sh, dev.sh, release.sh, vendor.sh
+└── docs/               # Architecture, development, and usage documentation
 ```
+
+## Documentation
+
+| Document | Description |
+|---|---|
+| [docs/architecture.md](docs/architecture.md) | Full architecture and layer design |
+| [docs/development.md](docs/development.md) | Adding commands, managing dependencies, release |
+| [docs/usage.md](docs/usage.md) | End-user usage guide |
+
+## AI-Assisted Development
+
+This template is configured for AI-assisted development.
+
+| Tool | Role |
+|---|---|
+| Claude Code | Architecture, large-scale changes, refactoring |
+| GitHub Copilot | Bug fixes, small implementation, unit tests |
+| Gemini CLI | Documentation management |
+
+See [`AI_CONTEXT.md`](AI_CONTEXT.md) and [`CLAUDE.md`](CLAUDE.md) for session context.
 
 ## Customizing this template
 
@@ -86,6 +109,16 @@ Alfred → entry.py → safe_run → core → router → commands → services �
 3. Update the workflow name in `pyproject.toml`
 4. Update shortcuts in `src/app/commands/open_cmd.py`
 5. Add your `workflow/icon.png`
+
+## Release
+
+```bash
+# 1. Bump version in pyproject.toml
+# 2. Tag and push
+git tag v1.2.3
+git push --tags
+# GitHub Actions builds .alfredworkflow and creates a GitHub Release
+```
 
 ## Support
 

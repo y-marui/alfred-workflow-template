@@ -1,4 +1,4 @@
-.PHONY: help install hooks lint format typecheck test test-cov vendor build release run clean
+.PHONY: help install hooks lint format typecheck test test-cov vendor build release run clean update-charter
 
 # Default target
 help:
@@ -16,6 +16,7 @@ help:
 	@echo "  make release     Create GitHub Release (requires git tag)"
 	@echo "  make run Q=''    Simulate Alfred with query Q"
 	@echo "  make clean       Remove build artifacts"
+	@echo "  make update-charter  Pull latest dev-charter via git subtree"
 	@echo ""
 
 # ---------------------------------------------------------------------------
@@ -76,3 +77,9 @@ clean:
 	rm -rf .build dist/ .coverage htmlcov/ .mypy_cache/ .pytest_cache/
 	find . -name "__pycache__" -type d -exec rm -rf {} + 2>/dev/null || true
 	find . -name "*.pyc" -delete
+
+# ---------------------------------------------------------------------------
+# Dev Charter
+# ---------------------------------------------------------------------------
+update-charter:
+	git subtree pull --prefix=docs/dev-charter dev-charter main --squash
