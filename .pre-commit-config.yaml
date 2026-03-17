@@ -20,7 +20,6 @@ repos:
       - id: check-added-large-files
         args: [--maxkb=500]
       - id: detect-private-key
-        exclude: ^docs/
 
   # Shell script linting
   - repo: https://github.com/shellcheck-py/shellcheck-py
