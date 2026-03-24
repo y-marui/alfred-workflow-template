@@ -15,13 +15,12 @@ jobs:
         with:
           fetch-depth: 0  # gitleaks needs full history
 
-      - uses: actions/setup-python@v5
+      - uses: astral-sh/setup-uv@v4
         with:
-          python-version: "3.11"
-          cache: pip
+          enable-cache: true
 
       - name: Install dev dependencies
-        run: pip install -e ".[dev]"
+        run: uv sync --extra dev
 
       - name: Run pre-commit (all hooks including gitleaks)
         uses: pre-commit/action@v3.0.1
@@ -32,22 +31,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+      - uses: astral-sh/setup-uv@v4
         with:
-          python-version: "3.11"
-          cache: pip
+          enable-cache: true
 
       - name: Install dev dependencies
-        run: pip install -e ".[dev]"
+        run: uv sync --extra dev
 
       - name: Ruff lint
-        run: ruff check src/ tests/
+        run: uv run ruff check src/ tests/
 
-      - name: Black format check
-        run: black --check src/ tests/
+      - name: Ruff format check
+        run: uv run ruff format --check src/ tests/
 
       - name: Mypy type check
-        run: mypy src/
+        run: uv run mypy src/
 
   test:
     name: Test (Python ${{ matrix.python-version }})
@@ -59,16 +57,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+      - uses: astral-sh/setup-uv@v4
         with:
+          enable-cache: true
           python-version: ${{ matrix.python-version }}
-          cache: pip
 
       - name: Install dev dependencies
-        run: pip install -e ".[dev]"
+        run: uv sync --extra dev
 
       - name: Run tests
-        run: pytest --tb=short
+        run: uv run pytest --tb=short
 
       - name: Upload coverage (Python 3.11 only)
         if: matrix.python-version == '3.11'
@@ -85,13 +83,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+      - uses: astral-sh/setup-uv@v4
         with:
-          python-version: "3.11"
-          cache: pip
+          enable-cache: true
 
       - name: Build .alfredworkflow
-        run: ./scripts/build.sh
+        run: USE_UV=1 ./scripts/build.sh
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4

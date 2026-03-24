@@ -7,6 +7,10 @@
 #   3. Copy src/ into the build dir
 #   4. Ensure vendor/ is up to date
 #   5. Zip into dist/<name>-<version>.alfredworkflow
+#
+# Inherits USE_UV from the environment (set by Makefile or caller):
+#   USE_UV=0 (default) → python3 / pip3
+#   USE_UV=1           → uv run python / uv pip
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -15,17 +19,26 @@ SRC_DIR="$REPO_ROOT/src"
 DIST_DIR="$REPO_ROOT/dist"
 BUILD_DIR="$REPO_ROOT/.build"
 
+# Select Python interpreter based on USE_UV flag
+if [[ "${USE_UV:-0}" == "1" ]]; then
+  PYTHON="uv run python"
+  PIP_INSTALL="uv pip install"
+else
+  PYTHON="python3"
+  PIP_INSTALL="pip3 install --quiet --upgrade"
+fi
+
 # ---------------------------------------------------------------------------
 # 1. Read version from pyproject.toml
 #    Delegated to scripts/read_version.py to avoid heredoc/quote conflicts.
 # ---------------------------------------------------------------------------
-VERSION=$(python3 scripts/read_version.py)
+VERSION=$($PYTHON scripts/read_version.py)
 echo "→ Version: $VERSION"
 
 # ---------------------------------------------------------------------------
 # 2. Sync version into workflow/info.plist
 # ---------------------------------------------------------------------------
-python3 - "$WORKFLOW_DIR/info.plist" "$VERSION" <<'EOF'
+$PYTHON - "$WORKFLOW_DIR/info.plist" "$VERSION" <<'EOF'
 import sys, plistlib, pathlib
 
 plist_path = pathlib.Path(sys.argv[1])
@@ -60,11 +73,9 @@ echo "→ Installing vendor dependencies"
 mkdir -p "$BUILD_DIR/vendor"
 
 if [[ -f "$REPO_ROOT/requirements.txt" ]]; then
-  pip3 install \
-    --quiet \
+  $PIP_INSTALL \
     --requirement "$REPO_ROOT/requirements.txt" \
-    --target "$BUILD_DIR/vendor" \
-    --upgrade
+    --target "$BUILD_DIR/vendor"
 else
   echo "  No requirements.txt - skipping"
 fi
@@ -81,7 +92,7 @@ find "$BUILD_DIR" -name "*.dist-info" -print0 | xargs -0 rm -rf
 mkdir -p "$DIST_DIR"
 
 # Read workflow name from info.plist for the output filename
-WORKFLOW_NAME=$(python3 - "$BUILD_DIR/info.plist" <<'EOF'
+WORKFLOW_NAME=$($PYTHON - "$BUILD_DIR/info.plist" <<'EOF'
 import sys, plistlib, pathlib, re
 with pathlib.Path(sys.argv[1]).open("rb") as f:
     data = plistlib.load(f)

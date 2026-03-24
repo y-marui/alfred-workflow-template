@@ -1,5 +1,28 @@
 .PHONY: help install hooks lint format typecheck test test-cov vendor build release run clean update-charter
 
+# ---------------------------------------------------------------------------
+# Python environment selector
+#
+#   USE_UV=0  (default) → global python3 / pip3
+#   USE_UV=1            → uv managed virtual environment
+#
+# Examples:
+#   make test            # uses global python3
+#   make test USE_UV=1   # uses uv venv
+# ---------------------------------------------------------------------------
+USE_UV ?= 0
+
+ifeq ($(USE_UV),1)
+  PYTHON := uv run python
+  RUN    := uv run
+else
+  PYTHON := python3
+  RUN    :=
+endif
+
+# Export so child shell scripts (vendor.sh, build.sh, dev.sh) inherit the flag
+export USE_UV
+
 # Default target
 help:
 	@echo "Alfred Workflow Template - Development Commands"
@@ -7,7 +30,7 @@ help:
 	@echo "  make install     Install dev dependencies"
 	@echo "  make hooks       Install pre-commit hooks"
 	@echo "  make lint        Run ruff linter"
-	@echo "  make format      Auto-format with black + ruff --fix"
+	@echo "  make format      Auto-format with ruff"
 	@echo "  make typecheck   Run mypy type checker"
 	@echo "  make test        Run tests"
 	@echo "  make test-cov    Run tests with coverage report"
@@ -18,39 +41,51 @@ help:
 	@echo "  make clean       Remove build artifacts"
 	@echo "  make update-charter  Pull latest dev-charter via git subtree"
 	@echo ""
+	@echo "  USE_UV=0 (default) → global python3 / pip3"
+	@echo "  USE_UV=1           → uv managed virtual environment"
+	@echo ""
 
 # ---------------------------------------------------------------------------
 # Setup
 # ---------------------------------------------------------------------------
 install:
+ifeq ($(USE_UV),1)
+	uv sync --extra dev
+	@$(MAKE) hooks
+else
 	pip3 install --quiet -e ".[dev]"
 	@command -v pre-commit >/dev/null 2>&1 && $(MAKE) hooks || true
+endif
 
 hooks:
+ifeq ($(USE_UV),1)
+	uv run pre-commit install
+else
 	pip3 install --quiet pre-commit
 	pre-commit install
+endif
 
 # ---------------------------------------------------------------------------
 # Code quality
 # ---------------------------------------------------------------------------
 lint:
-	ruff check src/ tests/
+	$(RUN) ruff check src/ tests/
 
 format:
-	black src/ tests/
-	ruff check --fix src/ tests/
+	$(RUN) ruff format src/ tests/
+	$(RUN) ruff check --fix src/ tests/
 
 typecheck:
-	mypy src/
+	$(RUN) mypy src/
 
 # ---------------------------------------------------------------------------
 # Tests
 # ---------------------------------------------------------------------------
 test:
-	pytest
+	$(RUN) pytest
 
 test-cov:
-	pytest --cov=src --cov-report=term-missing --cov-report=html
+	$(RUN) pytest --cov=src --cov-report=term-missing --cov-report=html
 
 # ---------------------------------------------------------------------------
 # Build
