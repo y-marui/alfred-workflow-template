@@ -6,6 +6,10 @@
 #   ./scripts/dev.sh "config"
 #   ./scripts/dev.sh ""
 #
+# Inherits USE_UV from the environment (set by Makefile or caller):
+#   USE_UV=0 (default) → python3
+#   USE_UV=1           → uv run python
+#
 # Output is pretty-printed JSON if `jq` is available.
 set -euo pipefail
 
@@ -30,13 +34,25 @@ export alfred_workflow_name="${alfred_workflow_name:-Workflow Dev}"
 
 mkdir -p "$alfred_workflow_cache" "$alfred_workflow_data"
 
+# Select Python command
+if [[ "${USE_UV:-0}" == "1" ]]; then
+  PYTHON_CMD="uv run python"
+else
+  PYTHON_CMD="python3"
+fi
+
 echo "─────────────────────────────────────"
 echo "  Alfred Script Filter Simulator"
 echo "  Query: \"$QUERY\""
+if [[ "${USE_UV:-0}" == "1" ]]; then
+  echo "  Python: uv venv"
+else
+  echo "  Python: $(python3 --version 2>&1)"
+fi
 echo "─────────────────────────────────────"
 
 if command -v jq &>/dev/null; then
-  python3 "$ENTRY" "$QUERY" | jq .
+  $PYTHON_CMD "$ENTRY" "$QUERY" | jq .
 else
-  python3 "$ENTRY" "$QUERY"
+  $PYTHON_CMD "$ENTRY" "$QUERY"
 fi

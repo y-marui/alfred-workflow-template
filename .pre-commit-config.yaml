@@ -45,11 +45,15 @@ repos:
         files: '^\.env(\..+)?$'
 
   # Type checking (runs mypy against src/)
+  # language: python → pre-commit manages its own isolated venv for mypy,
+  # so it works regardless of whether the project uses uv or global pip.
   - repo: local
     hooks:
       - id: mypy
         name: mypy
-        language: system
-        entry: mypy src
+        language: python
+        entry: mypy
+        args: [src]
         types: [python]
         pass_filenames: false
+        additional_dependencies: ["mypy>=1.9"]
