@@ -26,7 +26,7 @@ if [[ "${USE_UV:-0}" == "1" ]]; then
     --requirement "$REPO_ROOT/requirements.txt" \
     --target "$VENDOR_DIR"
 else
-  pip3 install \
+  env PIP_REQUIRE_VIRTUALENV=false pip3 install \
     --quiet \
     --requirement "$REPO_ROOT/requirements.txt" \
     --target "$VENDOR_DIR" \

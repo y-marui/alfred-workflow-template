@@ -3,14 +3,14 @@
 # ---------------------------------------------------------------------------
 # Python environment selector
 #
-#   USE_UV=0  (default) → global python3 / pip3
-#   USE_UV=1            → uv managed virtual environment
+#   USE_UV=1  (default when uv is found) → uv managed virtual environment
+#   USE_UV=0  (default when uv is absent) → global python3 / pip3
 #
-# Examples:
-#   make test            # uses global python3
-#   make test USE_UV=1   # uses uv venv
+# Auto-detected from PATH; override explicitly if needed:
+#   make test USE_UV=0   # force pip3 even if uv is installed
+#   make test USE_UV=1   # force uv
 # ---------------------------------------------------------------------------
-USE_UV ?= 0
+USE_UV ?= $(shell command -v uv >/dev/null 2>&1 && echo 1 || echo 0)
 
 ifeq ($(USE_UV),1)
   PYTHON := uv run python
@@ -41,8 +41,8 @@ help:
 	@echo "  make clean       Remove build artifacts"
 	@echo "  make update-charter  Pull latest dev-charter via git subtree"
 	@echo ""
-	@echo "  USE_UV=0 (default) → global python3 / pip3"
-	@echo "  USE_UV=1           → uv managed virtual environment"
+	@echo "  USE_UV=1 (default when uv found) → uv managed virtual environment"
+	@echo "  USE_UV=0 (default when uv absent) → global python3 / pip3"
 	@echo ""
 
 # ---------------------------------------------------------------------------
