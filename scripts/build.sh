@@ -25,7 +25,7 @@ if [[ "${USE_UV:-0}" == "1" ]]; then
   PIP_INSTALL="uv pip install"
 else
   PYTHON="python3"
-  PIP_INSTALL="pip3 install --quiet --upgrade"
+  PIP_INSTALL="env PIP_REQUIRE_VIRTUALENV=false pip3 install --quiet --upgrade"
 fi
 
 # ---------------------------------------------------------------------------
@@ -37,23 +37,11 @@ echo "→ Version: $VERSION"
 
 # ---------------------------------------------------------------------------
 # 2. Sync version into workflow/info.plist
+#    Use PlistBuddy for a surgical edit — avoids round-tripping the entire
+#    file through plistlib, which can corrupt Alfred Configuration Builder data.
 # ---------------------------------------------------------------------------
-$PYTHON - "$WORKFLOW_DIR/info.plist" "$VERSION" <<'EOF'
-import sys, plistlib, pathlib
-
-plist_path = pathlib.Path(sys.argv[1])
-version = sys.argv[2]
-
-with plist_path.open("rb") as f:
-    data = plistlib.load(f)
-
-data["version"] = version
-
-with plist_path.open("wb") as f:
-    plistlib.dump(data, f, fmt=plistlib.FMT_XML, sort_keys=False)
-
-print(f"  Synced info.plist version → {version}")
-EOF
+/usr/libexec/PlistBuddy -c "Set :version ${VERSION}" "$WORKFLOW_DIR/info.plist"
+echo "  Synced info.plist version → ${VERSION}"
 
 # ---------------------------------------------------------------------------
 # 3. Prepare build directory

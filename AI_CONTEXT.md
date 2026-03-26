@@ -238,6 +238,12 @@ make build            # dist/*.alfredworkflow を生成
 make vendor           # workflow/vendor/ を更新
 ```
 
+### コマンドの追加手順
+
+1. `src/app/commands/my_cmd.py` を作成（`handle(args: str) -> None` を実装）
+2. `src/app/core.py` に登録: `router.register("my")(my_cmd.handle)`
+3. `tests/test_commands.py` にテストを追加
+
 ## リリース手順
 
 ```bash
