@@ -7,7 +7,7 @@
 > 10分で開発を開始できます。
 
 [![CI](https://github.com/y-marui/alfred-workflow-template/actions/workflows/ci.yml/badge.svg)](https://github.com/y-marui/alfred-workflow-template/actions/workflows/ci.yml)
-<!-- TODO: プロジェクトを移行したら、上の CI バッジの URL を自分のリポジトリの URL に書き換えること -->
+<!-- TODO: CI バッジのリンク先と画像 URL（href と src の両方）を自分のリポジトリ URL に書き換えること。「このテンプレートのカスタマイズ手順」を参照。 -->
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 | 項目 | 内容 |

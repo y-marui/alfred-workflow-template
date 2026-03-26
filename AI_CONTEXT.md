@@ -76,6 +76,7 @@ scripts/        ← build.sh / dev.sh / release.sh / vendor.sh
 ### 言語ポリシー（LANGUAGE_POLICY）
 
 OSS プロジェクトのため、**公開面は英語を主言語**とする。
+**日本語版が編集の起点（正本）であり、英語版はその翻訳として同期する。**
 
 | 対象 | 言語 |
 |---|---|
@@ -105,10 +106,10 @@ OSS プロジェクトのため、**公開面は英語を主言語**とする。
 2. **per-repo pre-commit フック**（`.pre-commit-config.yaml`）— チーム強制・CI でも動作
 
 #### 自動ブロック項目
-- `anonymous` のままコミット（コミット帰属の担保）
+- `anonymous` のままコミット（個人 git フック側で対応。per-repo フックでは検知しない）
 - `.env` ファイルのコミット（`.env.example` は許可）
 - SSH 秘密鍵・クラウドトークン（gitleaks で検知）
-- ローカル絶対パスのハードコード（環境依存コードの防止）
+- ローカル絶対パスのハードコード（環境依存コードの防止。`.md`・`docs/` は allowlist で除外）
 - 500 KB を超えるファイル
 
 #### 手動遵守事項
@@ -119,7 +120,7 @@ OSS プロジェクトのため、**公開面は英語を主言語**とする。
 - AI との会話ログをリポジトリにコミットしない
 
 #### コードレビュー
-- `main` に到達するコミットは必ず他の開発者がレビューする
+- `main` に到達するコミットは可能な限り他の開発者がレビューする（個人開発の場合は PR を経由してセルフレビューする）
 - 認証・認可・暗号化・データアクセスに関わる変更はセキュリティレビューを必須とする
 
 詳細: `SECURITY.md`、`docs/dev-charter/SECURITY_POLICY.md`
@@ -138,7 +139,7 @@ Alfred Script Filter のレスポンス（JSON items）に適用するルール:
 OSS プロジェクトのため、以下の方式を採用:
 
 - **Buy Me a Coffee**: https://www.buymeacoffee.com/YOUR_USERNAME
-- **GitHub Sponsors**: リポジトリの Sponsors 機能（`.github/FUNDING.yml` で有効化）
+- **GitHub Sponsors**: リポジトリの Sponsors 機能（`.github/FUNDING.yml` 設定済み。`YOUR_USERNAME` を実際の値に置き換えること）
 
 README.md の末尾に Buy Me a Coffee バッジを掲載する。
 マネタイズを本格検討する場合は `MONETIZATION.md` を作成し、このファイルに概要を追記する。
@@ -231,6 +232,7 @@ make install          # dev 依存関係をインストール
 make run Q="search foo"  # Alfred をローカルでシミュレート
 make test             # テスト実行
 make lint             # ruff チェック
+make format           # ruff format（フォーマット適用）
 make typecheck        # mypy
 make build            # dist/*.alfredworkflow を生成
 make vendor           # workflow/vendor/ を更新

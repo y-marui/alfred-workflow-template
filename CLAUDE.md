@@ -27,7 +27,7 @@ Full architecture: `docs/architecture.md`
 make install       # install dev deps
 make run Q="search foo"  # simulate Alfred locally
 make test          # run tests
-make lint          # ruff + black check
+make lint          # ruff check
 make typecheck     # mypy
 make build         # produce dist/*.alfredworkflow
 ```
@@ -55,7 +55,7 @@ make build         # produce dist/*.alfredworkflow
 
 ## Code style
 
-- ruff + black, line length 100
+- ruff (linter) + ruff format (formatter), line length 100
 - Type hints required on all public functions
 - `from __future__ import annotations` at the top of every module
 
