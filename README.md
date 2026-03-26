@@ -22,7 +22,11 @@ and development rules used across projects.
 | [UI_GUIDELINES.md](UI_GUIDELINES.md) | UI guidelines, color palette, iconography |
 | [MONETIZATION_POLICY.md](MONETIZATION_POLICY.md) | Monetization policy and platform-specific guidelines |
 | [SECURITY_POLICY.md](SECURITY_POLICY.md) | Security policy and hook configuration reference |
-| [GITHUB_TEMPLATE_GUIDELINES.md](GITHUB_TEMPLATE_GUIDELINES.md) | GitHub template repository guidelines (environment, language, LICENSE, README) |
+| [LICENSE_POLICY.md](LICENSE_POLICY.md) | License selection criteria and templates (Closed / MIT / AGPL·GPL·LGPL) |
+| [topics/CI_POLICY.md](topics/CI_POLICY.md) | CI job design and Branch Protection Ruleset |
+| [topics/GITHUB_CONTRIBUTING.md](topics/GITHUB_CONTRIBUTING.md) | Issue, PR, CONTRIBUTING.md, PR template, and Quasi-CLA (for OSS) |
+| [topics/TEMPLATE_README_GUIDELINES.md](topics/TEMPLATE_README_GUIDELINES.md) | GitHub template repository README guidelines (environment, language, LICENSE, required sections) |
+| [topics/PROJECT_README_GUIDELINES.md](topics/PROJECT_README_GUIDELINES.md) | README setup guide for projects created from a template |
 
 ## How to Use
 
@@ -42,11 +46,16 @@ Create a config file for each AI tool so it is loaded automatically at the start
 @AI_CONTEXT.md
 ```
 
-**GitHub Copilot** — copy the contents of `AI_CONTEXT.md` into `.github/copilot-instructions.md`.
-Copilot cannot read files dynamically, so the content must be included directly. Keep it in sync with `AI_CONTEXT.md` in the same commit whenever `AI_CONTEXT.md` changes.
+**Gemini CLI** — create `GEMINI.md` at the project root:
 
-**Gemini CLI** — no automatic loading is available; pass `AI_CONTEXT.md` manually at each session.
-Update this instruction when Gemini CLI gains an auto-loading mechanism.
+```
+@AI_CONTEXT.md
+```
+
+If auto-loading is not yet supported, pass `AI_CONTEXT.md` manually at each session.
+Update this instruction when Gemini CLI gains a confirmed auto-loading mechanism.
+
+**GitHub Copilot** — add a reference to `AI_CONTEXT.md` in `.github/copilot-instructions.md`, and append only Copilot-specific settings there.
 
 ### 4. Update when the charter changes
 After `git subtree pull`, have the AI review the diff and update `AI_CONTEXT.md` as needed.
@@ -137,3 +146,7 @@ and update only the sections affected by charter changes.
 update-charter:
 	git subtree pull --prefix=docs/dev-charter dev-charter main --squash
 ```
+
+---
+
+*This document has a Japanese canonical version [README-jp.md](README-jp.md). Update both in the same commit when editing.*
