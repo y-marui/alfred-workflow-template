@@ -7,6 +7,7 @@
 > 10分で開発を開始できます。
 
 [![CI](https://github.com/y-marui/alfred-workflow-template/actions/workflows/ci.yml/badge.svg)](https://github.com/y-marui/alfred-workflow-template/actions/workflows/ci.yml)
+<!-- TODO: プロジェクトを移行したら、上の CI バッジの URL を自分のリポジトリの URL に書き換えること -->
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 | 項目 | 内容 |
@@ -124,8 +125,8 @@ git push --tags
 
 このテンプレートが役に立ったら、サポートしていただけると嬉しいです。
 
-- [Buy Me a Coffee](https://www.buymeacoffee.com/y.marui)
-- [GitHub Sponsors](https://github.com/sponsors/y-marui)
+- [Buy Me a Coffee](https://www.buymeacoffee.com/YOUR_USERNAME)
+- [GitHub Sponsors](https://github.com/sponsors/YOUR_USERNAME)
 
 ## ライセンス
 

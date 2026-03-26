@@ -7,6 +7,7 @@
 > Start shipping in 10 minutes.
 
 [![CI](https://github.com/y-marui/alfred-workflow-template/actions/workflows/ci.yml/badge.svg)](https://github.com/y-marui/alfred-workflow-template/actions/workflows/ci.yml)
+<!-- TODO: Replace the CI badge URL above with your own repository URL when using this template -->
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 | Field | Value |
@@ -124,8 +125,8 @@ git push --tags
 
 If this template saves you time, support is appreciated.
 
-- [Buy Me a Coffee](https://www.buymeacoffee.com/y.marui)
-- [GitHub Sponsors](https://github.com/sponsors/y-marui)
+- [Buy Me a Coffee](https://www.buymeacoffee.com/YOUR_USERNAME)
+- [GitHub Sponsors](https://github.com/sponsors/YOUR_USERNAME)
 
 ## License
 

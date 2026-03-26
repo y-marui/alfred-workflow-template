@@ -137,7 +137,7 @@ Alfred Script Filter のレスポンス（JSON items）に適用するルール:
 
 OSS プロジェクトのため、以下の方式を採用:
 
-- **Buy Me a Coffee**: https://www.buymeacoffee.com/y.marui
+- **Buy Me a Coffee**: https://www.buymeacoffee.com/YOUR_USERNAME
 - **GitHub Sponsors**: リポジトリの Sponsors 機能（`.github/FUNDING.yml` で有効化）
 
 README.md の末尾に Buy Me a Coffee バッジを掲載する。
