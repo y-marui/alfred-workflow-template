@@ -6,8 +6,8 @@
 > Production-ready template for building Alfred 5 Script Filter workflows.
 > Start shipping in 10 minutes.
 
-[![CI](https://github.com/y-marui/alfred-workflow-template/actions/workflows/ci.yml/badge.svg)](https://github.com/y-marui/alfred-workflow-template/actions/workflows/ci.yml)
 <!-- TODO: Replace the CI badge URL (both href and src) with your repository URL. See "Customizing this template" below. -->
+[![CI](https://github.com/y-marui/alfred-workflow-template/actions/workflows/ci.yml/badge.svg)](https://github.com/y-marui/alfred-workflow-template/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 | Field | Value |
