@@ -6,9 +6,10 @@
 > Alfred 5 Script Filter ワークフローのプロダクションレディなテンプレート。
 > 10分で開発を開始できます。
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 <!-- TODO: CI バッジのリンク先と画像 URL（href と src の両方）を自分のリポジトリ URL に書き換えること。「このテンプレートのカスタマイズ手順」を参照。 -->
 [![CI](https://github.com/y-marui/alfred-workflow-template/actions/workflows/ci.yml/badge.svg)](https://github.com/y-marui/alfred-workflow-template/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Charter Check](https://github.com/y-marui/alfred-workflow-template/actions/workflows/dev-charter-check.yml/badge.svg)](https://github.com/y-marui/alfred-workflow-template/actions/workflows/dev-charter-check.yml)
 
 | 項目 | 内容 |
 |---|---|
