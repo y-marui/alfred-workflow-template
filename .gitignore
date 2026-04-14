@@ -6,6 +6,7 @@ dist/
 workflow/vendor/
 
 # Python
+.venv/
 __pycache__/
 *.pyc
 *.pyo

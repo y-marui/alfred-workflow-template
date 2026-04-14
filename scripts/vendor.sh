@@ -2,9 +2,9 @@
 # Install runtime dependencies into workflow/vendor/
 # Run this after adding packages to requirements.txt.
 #
-# Inherits USE_UV from the environment (set by Makefile or caller):
-#   USE_UV=0 (default) → pip3
-#   USE_UV=1           → uv pip
+# Inherits use_uv from the environment (set by Makefile or caller):
+#   use_uv=0 (default) → pip3
+#   use_uv=1           → uv pip
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -21,7 +21,7 @@ if [[ ! -f "$REPO_ROOT/requirements.txt" ]]; then
   exit 0
 fi
 
-if [[ "${USE_UV:-0}" == "1" ]]; then
+if [[ "${use_uv:-0}" == "1" ]]; then
   uv pip install \
     --requirement "$REPO_ROOT/requirements.txt" \
     --target "$VENDOR_DIR"

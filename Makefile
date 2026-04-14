@@ -1,18 +1,18 @@
-.PHONY: help install hooks lint format typecheck test test-cov vendor build release run clean update-charter
+.PHONY: help install hooks lint format typecheck test test-cov vendor build deploy release run clean update-charter
 
 # ---------------------------------------------------------------------------
 # Python environment selector
 #
-#   USE_UV=1  (default when uv is found) → uv managed virtual environment
-#   USE_UV=0  (default when uv is absent) → global python3 / pip3
+#   use_uv=1  (default when uv is found) → uv managed virtual environment
+#   use_uv=0  (default when uv is absent) → global python3 / pip3
 #
 # Auto-detected from PATH; override explicitly if needed:
-#   make test USE_UV=0   # force pip3 even if uv is installed
-#   make test USE_UV=1   # force uv
+#   make test use_uv=0   # force pip3 even if uv is installed
+#   make test use_uv=1   # force uv
 # ---------------------------------------------------------------------------
-USE_UV ?= $(shell command -v uv >/dev/null 2>&1 && echo 1 || echo 0)
+use_uv ?= $(shell command -v uv >/dev/null 2>&1 && echo 1 || echo 0)
 
-ifeq ($(USE_UV),1)
+ifeq ($(use_uv),1)
   PYTHON := uv run python
   RUN    := uv run
 else
@@ -21,7 +21,7 @@ else
 endif
 
 # Export so child shell scripts (vendor.sh, build.sh, dev.sh) inherit the flag
-export USE_UV
+export use_uv
 
 # Default target
 help:
@@ -36,20 +36,21 @@ help:
 	@echo "  make test-cov    Run tests with coverage report"
 	@echo "  make vendor      Install runtime deps into workflow/vendor/"
 	@echo "  make build       Build .alfredworkflow package"
+	@echo "  make deploy      Build and install into Alfred"
 	@echo "  make release     Create GitHub Release (requires git tag)"
 	@echo "  make run Q=''    Simulate Alfred with query Q"
 	@echo "  make clean       Remove build artifacts"
 	@echo "  make update-charter  Pull latest dev-charter via git subtree"
 	@echo ""
-	@echo "  USE_UV=1 (default when uv found) → uv managed virtual environment"
-	@echo "  USE_UV=0 (default when uv absent) → global python3 / pip3"
+	@echo "  use_uv=1 (default when uv found) → uv managed virtual environment"
+	@echo "  use_uv=0 (default when uv absent) → global python3 / pip3"
 	@echo ""
 
 # ---------------------------------------------------------------------------
 # Setup
 # ---------------------------------------------------------------------------
 install:
-ifeq ($(USE_UV),1)
+ifeq ($(use_uv),1)
 	uv sync --extra dev
 	@$(MAKE) hooks
 else
@@ -58,7 +59,7 @@ else
 endif
 
 hooks:
-ifeq ($(USE_UV),1)
+ifeq ($(use_uv),1)
 	uv run pre-commit install
 else
 	pip3 install --quiet pre-commit
@@ -95,6 +96,9 @@ vendor:
 
 build: vendor
 	./scripts/build.sh
+
+deploy: build
+	@open dist/*.alfredworkflow
 
 release:
 	./scripts/release.sh

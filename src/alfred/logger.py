@@ -40,7 +40,7 @@ def get_logger(name: str = "workflow") -> logging.Logger:
     if logger.handlers:
         return logger
 
-    level_name = os.environ.get("LOG_LEVEL", "WARNING").upper()
+    level_name = os.environ.get("log_level", "WARNING").upper()
     level = getattr(logging, level_name, logging.WARNING)
     logger.setLevel(level)
     fmt = logging.Formatter(
