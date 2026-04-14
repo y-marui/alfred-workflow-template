@@ -177,6 +177,45 @@ Alfred ワークフローは現時点では UI テキストのローカライゼ
 
 ## Project-Specific Rules
 
+### テンプレートからプロジェクトへの移行（TEMPLATE_MIGRATION）
+
+このテンプレートから新しいワークフローを作成した場合、AI は以下の手順で `workflow/info.plist` を更新する。
+ユーザーから「テンプレートから移行する」「プロジェクトをセットアップする」などの指示を受けたときに実行する。
+
+#### 取得方法
+
+| フィールド | 取得元 |
+|---|---|
+| `bundleid` | `com.github.<owner>.<repo>` — `git remote get-url origin` から owner/repo を取得 |
+| `description` | `gh repo view <owner>/<repo> --json description --jq '.description'` |
+| `createdby` | `git config user.name` |
+| `category` | ユーザーに選択肢を提示して確認する（下記参照） |
+| `webaddress` | `https://github.com/<owner>/<repo>` |
+
+#### category の選択肢
+
+Alfred が受け付ける category 文字列:
+
+- `Tools & Utilities`
+- `Internet`
+- `Files & Folders`
+- `Productivity`
+- `Communication`
+- `Music & Audio`
+- `System`
+- `Games`
+- `Academic`
+- `Development`
+
+ユーザーにワークフローの用途を聞き、最も適切な category を提案して確認を取る。
+
+#### 更新手順
+
+`/usr/libexec/PlistBuddy` を使って `workflow/info.plist` を直接編集する。
+`category` キーは info.plist に存在しない場合があるため、存在しなければ `Add`、存在すれば `Set` を使う。
+
+---
+
 ### アーキテクチャ制約
 
 - `workflow/scripts/entry.py` は Alfred が実行する**唯一のファイル**。ビジネスロジックを書かない
@@ -191,6 +230,39 @@ Alfred ワークフローは現時点では UI テキストのローカライゼ
 - `ApiClient` 内の外部 API 呼び出しはモックする。テストで実際の HTTP 通信をしない
 - `conftest.py` が Alfred 環境変数を tmp ディレクトリに自動設定する
 - Alfred SDK ヘルパーのテストは `tests/test_alfred.py`
+
+### Python 開発環境（PYTHON_TOOLCHAIN）
+
+| 役割 | ツール |
+|---|---|
+| Python バージョン管理 | pyenv |
+| パッケージ管理・仮想環境・スクリプト実行 | uv |
+| Linter / Formatter | ruff |
+| 型チェック | mypy（strict モード） |
+| テスト | pytest |
+
+新しい Python プロジェクトを立ち上げる場合、または依存関係を変更する場合はこのツールチェーンに従う。
+
+### Alfred 実行環境（RUNTIME）
+
+Alfred からスクリプトを実行する際は `use_uv` 変数で実行方法を切り替える。
+
+- `use_uv` は Config Builder の checkbox（デフォルト: ON）として定義する
+- **ON かつ `uv` が PATH に存在する場合**: `uv run python` で実行
+- **OFF または `uv` が存在しない場合**: `python3` で実行
+
+`workflow/scripts/entry.py` を呼ぶスクリプト行のパターン:
+
+```bash
+[ "${use_uv:-1}" = "1" ] && command -v uv >/dev/null 2>&1 && exec uv run python scripts/entry.py "$1" || exec python3 scripts/entry.py "$1"
+```
+
+### 設定管理（CONFIG_BUILDER）
+
+- **ユーザーが設定する値はすべて Config Builder に入れる** — `workflow/info.plist` の `userconfigurationconfig` 配列に追加する
+- Alfred の `variables` キー（environment variable）は使わない。Config Builder で代替できる場合は必ず Config Builder を使う
+- Config Builder の値は Alfred がスクリプト実行時に環境変数として自動で渡すため、スクリプト側では `os.environ` で読める
+- 新しい設定項目を追加するときは以下の型から選ぶ: `textfield` / `checkbox` / `select` / `file` / `password`
 
 ### コードスタイル
 
@@ -238,6 +310,7 @@ Alfred ワークフローは現時点では UI テキストのローカライゼ
 - デバッグ用 `print` 文の本番コードへの残置
 - Alfred 結果アイテムへの Unicode 絵文字の使用
 - ハードコードされた絶対パス（`$HOME` を使う）
+- Config Builder で代替できる設定を Alfred の `variables` キー（environment variable）に直接書くこと
 - AI に秘密情報を含むファイルやコードを渡すこと
 - AI との会話ログのリポジトリへのコミット
 
