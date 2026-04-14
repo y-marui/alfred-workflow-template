@@ -17,8 +17,8 @@ from alfred.logger import get_logger
 
 log = get_logger(__name__)
 
-# TODO: Replace with your API's base URL (also set API_BASE_URL in Alfred's Configuration Builder)
-_BASE_URL = os.environ.get("API_BASE_URL", "https://api.example.com/v1")
+# TODO: Replace with your API's base URL (also set api_base_url in Alfred's Configuration Builder)
+_BASE_URL = os.environ.get("api_base_url", "https://api.example.com/v1")
 
 
 class ApiClientError(Exception):
@@ -35,7 +35,7 @@ class ApiClient:
     def __init__(self, base_url: str = _BASE_URL, timeout: float | None = None) -> None:
         self._base_url = base_url.rstrip("/")
         self._timeout = (
-            timeout if timeout is not None else float(os.environ.get("API_TIMEOUT", "5"))
+            timeout if timeout is not None else float(os.environ.get("api_timeout", "5"))
         )
 
     def search(self, query: str) -> list[dict[str, Any]]:

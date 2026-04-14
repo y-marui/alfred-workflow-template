@@ -24,7 +24,7 @@ class ExampleService:
     """
 
     def __init__(self, ttl: int | None = None) -> None:
-        resolved_ttl = ttl if ttl is not None else int(os.environ.get("CACHE_TTL", "300"))
+        resolved_ttl = ttl if ttl is not None else int(os.environ.get("cache_ttl", "300"))
         self._cache = Cache(ttl=resolved_ttl, namespace="example_service")
         self._client = ApiClient()
 

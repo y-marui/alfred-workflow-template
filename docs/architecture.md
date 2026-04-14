@@ -112,147 +112,31 @@ The entire `.build/` directory is zipped to `dist/<name>-<version>.alfredworkflo
 ## Alfred Configuration Builder (`userconfigurationconfig`)
 
 Alfred 5 の Configuration Builder は `info.plist` の `userconfigurationconfig` キーで定義する。
-ドキュメントがほぼないため、利用可能な型を以下にまとめる。
+利用可能な全型・各キーの詳細は [`docs/configuration-builder.md`](configuration-builder.md) を参照。
 
-各エントリの共通フィールド:
+### 変数の受け渡し
 
-| キー | 説明 |
-|---|---|
-| `type` | ウィジェット種別（下記参照） |
-| `variable` | Alfred が環境変数として渡す変数名 |
-| `label` | UI に表示されるラベル |
-| `description` | ラベル下に表示される補足テキスト |
-| `config` | 型ごとの設定（下記参照） |
+Alfred はスクリプト実行時に各 `variable` を環境変数として渡す。
+インストール直後は `prefs.plist` が存在しないため変数は未セットになる場合がある。
+スクリプト側で常にデフォルト値を持たせること。
 
-### 型一覧
-
-#### `textfield` — 1行テキスト入力
-
-~~~xml
-<dict>
-    <key>type</key><string>textfield</string>
-    <key>variable</key><string>MY_VAR</string>
-    <key>label</key><string>API Key</string>
-    <key>config</key>
-    <dict>
-        <key>default</key><string></string>
-        <key>placeholder</key><string>Enter your key…</string>
-        <key>required</key><false/>
-        <key>trim</key><true/>
-    </dict>
-</dict>
+~~~python
+# Python
+value = os.environ.get("my_variable", "fallback")
 ~~~
 
-#### `textarea` — 複数行テキスト入力
-
-~~~xml
-<dict>
-    <key>type</key><string>textarea</string>
-    <key>config</key>
-    <dict>
-        <key>default</key><string></string>
-        <key>required</key><false/>
-        <key>trim</key><true/>
-        <key>verticalsize</key><integer>0</integer>
-    </dict>
-</dict>
+~~~bash
+# Shell
+[ "${use_uv:-1}" = "1" ] && ...
 ~~~
 
-#### `checkbox` — チェックボックス（値: `1` / `0`）
-
-~~~xml
-<dict>
-    <key>type</key><string>checkbox</string>
-    <key>variable</key><string>USE_UV</string>
-    <key>label</key><string>Use uv</string>
-    <key>config</key>
-    <dict>
-        <key>default</key><true/>
-        <key>required</key><false/>
-        <key>text</key><string>チェックボックス横に表示するテキスト</string>
-    </dict>
-</dict>
-~~~
-
-チェック時は `"1"`、未チェック時は `"0"` が変数にセットされる。
-
-#### `popupbutton` — ドロップダウン選択
-
-~~~xml
-<dict>
-    <key>type</key><string>popupbutton</string>
-    <key>variable</key><string>MY_OPTION</string>
-    <key>config</key>
-    <dict>
-        <key>default</key><string>option_a</string>
-        <key>pairs</key>
-        <array>
-            <dict>
-                <key>label</key><string>Option A</string>
-                <key>value</key><string>option_a</string>
-            </dict>
-            <dict>
-                <key>label</key><string>Option B</string>
-                <key>value</key><string>option_b</string>
-            </dict>
-        </array>
-    </dict>
-</dict>
-~~~
-
-#### `filepicker` — ファイル/ディレクトリ選択
-
-~~~xml
-<dict>
-    <key>type</key><string>filepicker</string>
-    <key>variable</key><string>MY_PATH</string>
-    <key>config</key>
-    <dict>
-        <key>default</key><string></string>
-        <key>filtermode</key><integer>0</integer>  <!-- 0: files, 1: dirs, 2: both -->
-        <key>placeholder</key><string></string>
-        <key>required</key><false/>
-    </dict>
-</dict>
-~~~
-
-#### `slider` — スライダー（整数値）
-
-~~~xml
-<dict>
-    <key>type</key><string>slider</string>
-    <key>variable</key><string>MAX_RESULTS</string>
-    <key>config</key>
-    <dict>
-        <key>minvalue</key><integer>0</integer>
-        <key>maxvalue</key><integer>50</integer>
-        <key>defaultvalue</key><integer>10</integer>
-        <key>markercount</key><integer>5</integer>
-        <key>showmarkers</key><true/>
-        <key>onlystoponmarkers</key><false/>
-    </dict>
-</dict>
-~~~
+**注意:** `checkbox` 型の unchecked 値は `"0"` ではなく空文字 `""` になる。
+`[ "$var" = "1" ]` で判定し、`"0"` との比較は避けること。
 
 ### `variables` / `prefs.plist` / `default` の関係
-
-Alfred は設定値を三層で管理する:
 
 | 場所 | 役割 |
 |---|---|
 | `userconfigurationconfig[].config.default` | Configuration Builder UI の初期表示のみ。変数への書き込みは行わない。 |
 | `prefs.plist`（同ディレクトリ） | ユーザーが Configuration Builder で保存した値。Alfred が自動生成・更新する。 |
 | `info.plist` の `variables` | スクリプトに常に渡したい固定の環境変数。Configuration Builder で管理する変数はここに入れない。 |
-
-インストール直後は `prefs.plist` が存在しないため、変数は未セット。
-スクリプト側で `${USE_UV:-0}` のようにデフォルト値を持たせることで対応する。
-ユーザーが Configuration Builder で保存すると `prefs.plist` が生成・更新される。
-
-~~~xml
-<!-- prefs.plist: ユーザーが変更した値（Alfred が自動生成） -->
-<dict>
-    <key>USE_UV</key><false/>
-</dict>
-~~~
-
-変数はスクリプト実行時に環境変数として渡されるため、シェルスクリプトでは `$USE_UV`、Python では `os.environ.get("USE_UV")` で参照できる。

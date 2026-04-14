@@ -6,9 +6,10 @@
 #   ./scripts/dev.sh "config"
 #   ./scripts/dev.sh ""
 #
-# Inherits USE_UV from the environment (set by Makefile or caller):
-#   USE_UV=0 (default) → python3
-#   USE_UV=1           → uv run python
+# Inherits use_uv from the environment (set by Makefile or caller).
+# When not set, auto-detects uv: ON if uv is found, OFF otherwise.
+#   use_uv=1 (default when uv found) → uv run python
+#   use_uv=0                         → python3
 #
 # Output is pretty-printed JSON if `jq` is available.
 set -euo pipefail
@@ -17,6 +18,11 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 ENTRY="$REPO_ROOT/workflow/scripts/entry.py"
 
 QUERY="${1:-}"
+
+# Auto-detect uv when use_uv is not explicitly set
+if [[ -z "${use_uv+set}" ]]; then
+  command -v uv >/dev/null 2>&1 && use_uv=1 || use_uv=0
+fi
 
 # Make src/ importable without `pip install -e .`
 # In the packaged workflow, entry.py adds workflow_root/src/ to sys.path.
@@ -35,7 +41,7 @@ export alfred_workflow_name="${alfred_workflow_name:-Workflow Dev}"
 mkdir -p "$alfred_workflow_cache" "$alfred_workflow_data"
 
 # Select Python command
-if [[ "${USE_UV:-0}" == "1" ]]; then
+if [[ "$use_uv" == "1" ]]; then
   PYTHON_CMD="uv run python"
 else
   PYTHON_CMD="python3"
@@ -44,7 +50,7 @@ fi
 echo "─────────────────────────────────────"
 echo "  Alfred Script Filter Simulator"
 echo "  Query: \"$QUERY\""
-if [[ "${USE_UV:-0}" == "1" ]]; then
+if [[ "$use_uv" == "1" ]]; then
   echo "  Python: uv venv"
 else
   echo "  Python: $(python3 --version 2>&1)"

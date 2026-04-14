@@ -58,7 +58,7 @@
 				<key>runningsubtext</key>
 				<string>Loading…</string>
 				<key>script</key>
-				<string>[ "${USE_UV:-0}" = "1" ] &amp;&amp; command -v uv &gt;/dev/null 2&gt;&amp;1 &amp;&amp; exec uv run python scripts/entry.py "$1" || exec python3 scripts/entry.py "$1"</string>
+				<string>[ "${use_uv:-1}" = "1" ] &amp;&amp; command -v uv &gt;/dev/null 2&gt;&amp;1 &amp;&amp; exec uv run python scripts/entry.py "$1" || exec python3 scripts/entry.py "$1"</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
@@ -149,7 +149,7 @@ Replace the placeholder commands and API client with your own logic.</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
-			<string>USE_UV</string>
+			<string>use_uv</string>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -173,7 +173,7 @@ Replace the placeholder commands and API client with your own logic.</string>
 			<key>type</key>
 			<string>select</string>
 			<key>variable</key>
-			<string>LOG_LEVEL</string>
+			<string>log_level</string>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -190,7 +190,7 @@ Replace the placeholder commands and API client with your own logic.</string>
 			<key>type</key>
 			<string>textfield</string>
 			<key>variable</key>
-			<string>CACHE_TTL</string>
+			<string>cache_ttl</string>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -207,7 +207,7 @@ Replace the placeholder commands and API client with your own logic.</string>
 			<key>type</key>
 			<string>textfield</string>
 			<key>variable</key>
-			<string>API_BASE_URL</string>
+			<string>api_base_url</string>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -224,7 +224,7 @@ Replace the placeholder commands and API client with your own logic.</string>
 			<key>type</key>
 			<string>textfield</string>
 			<key>variable</key>
-			<string>API_TIMEOUT</string>
+			<string>api_timeout</string>
 		</dict>
 	</array>
 	<key>version</key>

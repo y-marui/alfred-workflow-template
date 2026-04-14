@@ -8,9 +8,9 @@
 #   4. Ensure vendor/ is up to date
 #   5. Zip into dist/<name>-<version>.alfredworkflow
 #
-# Inherits USE_UV from the environment (set by Makefile or caller):
-#   USE_UV=0 (default) → python3 / pip3
-#   USE_UV=1           → uv run python / uv pip
+# Inherits use_uv from the environment (set by Makefile or caller):
+#   use_uv=0 (default) → python3 / pip3
+#   use_uv=1           → uv run python / uv pip
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -19,8 +19,8 @@ SRC_DIR="$REPO_ROOT/src"
 DIST_DIR="$REPO_ROOT/dist"
 BUILD_DIR="$REPO_ROOT/.build"
 
-# Select Python interpreter based on USE_UV flag
-if [[ "${USE_UV:-0}" == "1" ]]; then
+# Select Python interpreter based on use_uv flag
+if [[ "${use_uv:-0}" == "1" ]]; then
   PYTHON="uv run python"
   PIP_INSTALL="uv pip install"
 else
