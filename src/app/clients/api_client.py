@@ -7,6 +7,7 @@ Business logic belongs in services, not here.
 from __future__ import annotations
 
 import json
+import os
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -16,8 +17,8 @@ from alfred.logger import get_logger
 
 log = get_logger(__name__)
 
-# TODO: Replace with your API's base URL
-_BASE_URL = "https://api.example.com/v1"
+# TODO: Replace with your API's base URL (also set API_BASE_URL in Alfred's Configuration Builder)
+_BASE_URL = os.environ.get("API_BASE_URL", "https://api.example.com/v1")
 
 
 class ApiClientError(Exception):
@@ -31,9 +32,11 @@ class ApiClient:
     and add them to requirements.txt.
     """
 
-    def __init__(self, base_url: str = _BASE_URL, timeout: float = 5.0) -> None:
+    def __init__(self, base_url: str = _BASE_URL, timeout: float | None = None) -> None:
         self._base_url = base_url.rstrip("/")
-        self._timeout = timeout
+        self._timeout = (
+            timeout if timeout is not None else float(os.environ.get("API_TIMEOUT", "5"))
+        )
 
     def search(self, query: str) -> list[dict[str, Any]]:
         """Search the API and return a list of result dicts.

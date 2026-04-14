@@ -6,6 +6,7 @@ commands and external clients (APIs, local data, etc.).
 
 from __future__ import annotations
 
+import os
 from typing import Any, cast
 
 from alfred.cache import Cache
@@ -22,8 +23,9 @@ class ExampleService:
     data source your workflow targets.
     """
 
-    def __init__(self, ttl: int = 300) -> None:
-        self._cache = Cache(ttl=ttl, namespace="example_service")
+    def __init__(self, ttl: int | None = None) -> None:
+        resolved_ttl = ttl if ttl is not None else int(os.environ.get("CACHE_TTL", "300"))
+        self._cache = Cache(ttl=resolved_ttl, namespace="example_service")
         self._client = ApiClient()
 
     def search(self, query: str) -> list[dict[str, Any]]:

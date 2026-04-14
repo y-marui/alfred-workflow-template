@@ -3,9 +3,6 @@
 > **This is the English (reference) version.**
 > For the Japanese canonical version, see [README-jp.md](README-jp.md).
 
-> Production-ready template for building Alfred 5 Script Filter workflows.
-> Start shipping in 10 minutes.
-
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 <!-- TODO: Replace the CI badge URL (both href and src) with your repository URL. See "Customizing this template" below. -->
 [![CI](https://github.com/y-marui/alfred-workflow-template/actions/workflows/ci.yml/badge.svg)](https://github.com/y-marui/alfred-workflow-template/actions/workflows/ci.yml)
@@ -16,8 +13,12 @@
 | Target | Alfred 5 Script Filter workflow |
 | Team size | Individual to small team (1–3 people) |
 | Language | English (OSS) |
+| License | MIT |
 | Runtime | Python 3.9+, Alfred 5 |
 | AI tools | Claude Code / GitHub Copilot / Gemini CLI |
+
+> Production-ready template for building Alfred 5 Script Filter workflows.
+> Start shipping in 10 minutes.
 
 ## Features
 
@@ -101,7 +102,7 @@ This template is configured for AI-assisted development.
 
 See [`AI_CONTEXT.md`](AI_CONTEXT.md) and [`CLAUDE.md`](CLAUDE.md) for session context.
 
-## Customizing this template
+## Customizing This Template
 
 1. Edit `workflow/info.plist`:
    - Replace `bundleid` with your bundle ID (`com.yourname.workflowname`)
@@ -132,3 +133,7 @@ If this template saves you time, support is appreciated.
 ## License
 
 MIT — see [LICENSE](LICENSE)
+
+---
+
+*This is the reference (English) version. The canonical Japanese version is [README-jp.md](README-jp.md). Update both files in the same commit.*
