@@ -3,9 +3,6 @@
 > **これは日本語版（正本）です。**
 > 英語版（参照）は [README.md](README.md) を参照してください。
 
-> Alfred 5 Script Filter ワークフローのプロダクションレディなテンプレート。
-> 10分で開発を開始できます。
-
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 <!-- TODO: CI バッジのリンク先と画像 URL（href と src の両方）を自分のリポジトリ URL に書き換えること。「このテンプレートのカスタマイズ手順」を参照。 -->
 [![CI](https://github.com/y-marui/alfred-workflow-template/actions/workflows/ci.yml/badge.svg)](https://github.com/y-marui/alfred-workflow-template/actions/workflows/ci.yml)
@@ -16,10 +13,14 @@
 | 開発対象 | Alfred 5 Script Filter ワークフロー |
 | 開発環境 | 個人〜小規模チーム（1〜3人） |
 | 主言語 | 英語（OSS） |
-| 動作要件 | Python 3.9+, Alfred 5 |
+| ライセンス | MIT |
+| 動作環境 | Python 3.9+, Alfred 5 |
 | AI ツール | Claude Code / GitHub Copilot / Gemini CLI |
 
-## 特徴
+> Alfred 5 Script Filter ワークフローのプロダクションレディなテンプレート。
+> 10分で開発を開始できます。
+
+## Features
 
 - ✅ **レイヤードアーキテクチャ** — Alfred 境界とビジネスロジックを分離
 - ✅ **軽量 Alfred SDK** — レスポンスビルダー、ルーター、キャッシュ、設定、ロガー
@@ -29,13 +30,13 @@
 - ✅ **ベンダーパッケージング** — サードパーティ依存を `vendor/` にバンドル
 - ✅ **AI 対応** — `AI_CONTEXT.md` + `CLAUDE.md` で AI アシスタントのコンテキストを管理
 
-## 動作要件
+## Requirements
 
 - Alfred 5（Script Filter には Powerpack が必要）
 - Python 3.9+
 - [pre-commit](https://pre-commit.com/)（セキュリティフック用）
 
-## クイックスタート（開発者）
+## Quick Start (developers)
 
 ```bash
 git clone https://github.com/yourname/alfred-workflow-template
@@ -58,7 +59,7 @@ make build
 
 `dist/*.alfredworkflow` をダブルクリックして Alfred にインストールします。
 
-## 使い方
+## Usage
 
 ```
 wf <query>           検索（デフォルト）
@@ -68,7 +69,7 @@ wf config            設定の確認 / リセット
 wf help              コマンド一覧を表示
 ```
 
-## プロジェクト構造
+## Project Structure
 
 ```
 alfred-workflow-template/
@@ -81,7 +82,7 @@ alfred-workflow-template/
 └── docs/               # アーキテクチャ・開発・利用ドキュメント
 ```
 
-## ドキュメント
+## Documentation
 
 | ドキュメント | 内容 |
 |---|---|
@@ -89,7 +90,7 @@ alfred-workflow-template/
 | [docs/development.md](docs/development.md) | コマンド追加・依存関係管理・リリース手順 |
 | [docs/usage.md](docs/usage.md) | エンドユーザー向け利用ガイド |
 
-## AI 支援開発
+## AI-Assisted Development
 
 このテンプレートは AI 支援開発に対応しています。
 
@@ -101,7 +102,7 @@ alfred-workflow-template/
 
 セッションコンテキスト: [`AI_CONTEXT.md`](AI_CONTEXT.md)、[`CLAUDE.md`](CLAUDE.md)
 
-## このテンプレートのカスタマイズ手順
+## Customizing This Template
 
 1. `workflow/info.plist` を編集:
    - `bundleid` を自分のバンドル ID に変更（例: `com.yourname.workflowname`）
@@ -112,7 +113,7 @@ alfred-workflow-template/
 4. `src/app/commands/open_cmd.py` のショートカットを更新
 5. `workflow/icon.png` を追加
 
-## リリース手順
+## Release
 
 ```bash
 # 1. pyproject.toml のバージョンを更新
@@ -122,13 +123,17 @@ git push --tags
 # GitHub Actions が .alfredworkflow をビルドして GitHub Release を作成
 ```
 
-## サポート
+## Support
 
 このテンプレートが役に立ったら、サポートしていただけると嬉しいです。
 
 - [Buy Me a Coffee](https://www.buymeacoffee.com/YOUR_USERNAME)
 - [GitHub Sponsors](https://github.com/sponsors/YOUR_USERNAME)
 
-## ライセンス
+## License
 
 MIT — [LICENSE](LICENSE) を参照
+
+---
+
+*この文書には英語版（参照版）[README.md](README.md) があります。編集時は同一コミットで更新してください。*
