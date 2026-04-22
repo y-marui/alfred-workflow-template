@@ -4,6 +4,14 @@
 > AIツールはセッション開始時にこのファイルを読むことで、憲章全体を参照しなくても
 > プロジェクトの方針を把握できます。
 
+## AIセッション開始時の参照順
+
+1. `README.md` — セットアップ・使い方・runbook の索引（人間向け）
+2. `docs/architecture.md` — 構造・設計概要（人間・AI共用）
+3. このファイル（`AI_CONTEXT.md`）— AI 固有の指示・開発ルール・guardrails・design decisions
+
+不明点は `docs/dev-charter/CHARTER_INDEX.md` → 該当ファイルの順で参照する。
+
 ---
 
 ## Project Overview
@@ -322,11 +330,13 @@ Alfred からスクリプトを実行する際は `use_uv` 変数で実行方法
 make install          # dev 依存関係をインストール
 make run Q="search foo"  # Alfred をローカルでシミュレート
 make test             # テスト実行
+make test-cov         # テスト実行（カバレッジレポート付き）
 make lint             # ruff チェック
 make format           # ruff format（フォーマット適用）
 make typecheck        # mypy
 make build            # dist/*.alfredworkflow を生成
 make vendor           # workflow/vendor/ を更新
+make release          # 手動リリース（GitHub CLI 使用）
 ```
 
 ### コマンドの追加手順
@@ -335,13 +345,36 @@ make vendor           # workflow/vendor/ を更新
 2. `src/app/core.py` に登録: `router.register("my")(my_cmd.handle)`
 3. `tests/test_commands.py` にテストを追加
 
+### サードパーティ依存の追加
+
+1. `requirements.txt` に追加
+2. `make vendor` を実行（`workflow/vendor/` を更新）
+3. `entry.py` がベンダーパスを自動追加するため、コード側では通常の `import` でよい
+
+### Alfred でのテスト手順
+
+1. `make build` でパッケージ生成
+2. `dist/*.alfredworkflow` をダブルクリックして Alfred にインストール
+3. Alfred を開いてキーワードを入力して動作確認
+
+開発中は `workflow/` ディレクトリを Alfred のワークフローディレクトリに直接シンボリックリンクすることもできるが、`make run` シミュレーターの方が速い。
+
 ## リリース手順
 
 ```bash
-# pyproject.toml のバージョンを更新
+# 1. pyproject.toml のバージョンを更新
+# 2. CHANGELOG.md を更新
+git add pyproject.toml CHANGELOG.md
+git commit -m "chore: release v1.2.3"
+
+# 3. タグを付けてプッシュ
 git tag v1.2.3
-git push --tags
+git push origin main --tags
 # GitHub Actions が .alfredworkflow を生成して GitHub Release を作成
+
+# 手動リリースする場合
+make build
+make release
 ```
 
 ---

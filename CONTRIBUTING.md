@@ -50,7 +50,7 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/):
 feat: add clipboard copy action
 fix: cache miss on special characters in query
 chore: update ruff to 0.5.0
-docs: add examples to usage.md
+docs: update README usage section
 refactor: simplify router dispatch logic
 ```
 
@@ -61,5 +61,5 @@ refactor: simplify router dispatch logic
 - [ ] `make test` passes
 - [ ] `make build` succeeds
 - [ ] New commands have tests
-- [ ] `docs/usage.md` updated if user-facing changes
+- [ ] `README.md` updated if user-facing changes
 - [ ] `CHANGELOG.md` entry added under `[Unreleased]`

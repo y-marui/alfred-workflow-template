@@ -14,7 +14,7 @@
 - [ ] `make test` passes
 - [ ] `make build` succeeds
 - [ ] New commands have tests
-- [ ] `docs/usage.md` updated if user-facing changes
+- [ ] `README.md` updated if user-facing changes
 - [ ] `CHANGELOG.md` entry added under `[Unreleased]`
 - [ ] Tested manually in Alfred (`make run Q="..."`) if applicable
 

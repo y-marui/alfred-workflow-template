@@ -61,13 +61,61 @@ make build
 
 ## Usage
 
+Alfred を開いて `wf` に続けてスペースを入力します。
+
+### 検索（デフォルト）
+
 ```
-wf <query>           検索（デフォルト）
-wf search <query>    検索
-wf open <name>       ショートカットを開く
-wf config            設定の確認 / リセット
-wf help              コマンド一覧を表示
+wf <query>
+wf search <query>
 ```
+
+クエリを入力して検索します。Enter を押すと結果を開きます。
+
+| キー | 操作 |
+|---|---|
+| ↩ Enter | 結果を開く |
+| ⌘C | 結果の URL をコピー |
+
+### Open
+
+```
+wf open <name>
+```
+
+ショートカットを開きます。利用可能なショートカット: `repo`、`docs`、`issues`
+
+### Config
+
+```
+wf config
+wf config reset
+```
+
+現在の設定を確認、またはすべての設定をリセットします。
+
+### Help
+
+```
+wf help
+```
+
+利用可能なコマンド一覧を表示します。
+
+### Tips
+
+- ワークフローは最もよく使った結果を記憶します（Alfred の学習機能）。
+- API 呼び出しを最小化するため、結果は 5 分間キャッシュされます。
+- `⌘,` で Alfred のワークフロー設定にアクセスできます。
+
+### トラブルシューティング
+
+**結果が表示されない場合**
+- Alfred のデバッガーを確認: Alfred を開いて `⌘D`
+- ログを確認: `~/Library/Logs/Alfred/Workflow/<bundle-id>.log`
+
+**結果が古い場合**
+- キャッシュ TTL は 5 分です。期限切れを待つか、手動でクリア: `wf config reset`
 
 ## Project Structure
 
@@ -79,7 +127,7 @@ alfred-workflow-template/
 ├── workflow/           # Alfred パッケージ (info.plist, scripts/entry.py, vendor/)
 ├── tests/              # pytest テストスイート
 ├── scripts/            # build.sh, dev.sh, release.sh, vendor.sh
-└── docs/               # アーキテクチャ・開発・利用ドキュメント
+└── docs/               # アーキテクチャ・リファレンスドキュメント
 ```
 
 ## Documentation
@@ -87,8 +135,7 @@ alfred-workflow-template/
 | ドキュメント | 内容 |
 |---|---|
 | [docs/architecture.md](docs/architecture.md) | アーキテクチャ全体設計 |
-| [docs/development.md](docs/development.md) | コマンド追加・依存関係管理・リリース手順 |
-| [docs/usage.md](docs/usage.md) | エンドユーザー向け利用ガイド |
+| [docs/configuration-builder.md](docs/configuration-builder.md) | Alfred Configuration Builder リファレンス |
 
 ## AI-Assisted Development
 
