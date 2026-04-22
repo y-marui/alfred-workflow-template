@@ -203,4 +203,3 @@ This is a workflow template. Common areas of concern:
 | `check-added-large-files` | Files over 500 KB |
 
 These hooks run on every commit (pre-commit) and in CI (`security` job).
-
