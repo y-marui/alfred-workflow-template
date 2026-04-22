@@ -134,7 +134,10 @@ alfred-workflow-template/
 
 | ドキュメント | 内容 |
 |---|---|
-| [docs/architecture.md](docs/architecture.md) | アーキテクチャ全体設計 |
+| [docs/architecture.md](docs/architecture.md) | モジュール・レイヤー構造 |
+| [docs/file-map.md](docs/file-map.md) | ファイルレベルの依存関係マップ |
+| [docs/specification.md](docs/specification.md) | 機能仕様・データフロー |
+| [docs/ui-design.md](docs/ui-design.md) | Alfred 結果アイテムの UI 設計指針 |
 | [docs/configuration-builder.md](docs/configuration-builder.md) | Alfred Configuration Builder リファレンス |
 
 ## AI-Assisted Development

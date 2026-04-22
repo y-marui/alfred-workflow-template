@@ -134,7 +134,10 @@ alfred-workflow-template/
 
 | Document | Description |
 |---|---|
-| [docs/architecture.md](docs/architecture.md) | Full architecture and layer design |
+| [docs/architecture.md](docs/architecture.md) | Module and layer design |
+| [docs/file-map.md](docs/file-map.md) | File-level dependency map |
+| [docs/specification.md](docs/specification.md) | Feature specification and data flow |
+| [docs/ui-design.md](docs/ui-design.md) | Alfred result item UI conventions |
 | [docs/configuration-builder.md](docs/configuration-builder.md) | Alfred Configuration Builder reference |
 
 ## AI-Assisted Development
