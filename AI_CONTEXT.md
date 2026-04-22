@@ -4,15 +4,19 @@
 > AIツールはセッション開始時にこのファイルを読むことで、憲章全体を参照しなくても
 > プロジェクトの方針を把握できます。
 
-## AIセッション開始時の参照順
+## Reference Order
 
-1. `README.md` — 概要・セットアップ・使い方（人間向け）
-2. `docs/architecture.md` — モジュール・コンポーネント構造（人間・AI共用）
-3. `docs/file-map.md` — ファイルレベルの依存関係（人間・AI共用）
-4. `docs/specification.md` — 機能仕様・データフロー（人間・AI共用）
-5. このファイル（`AI_CONTEXT.md`）— AI 固有の指示・開発ルール・guardrails・design decisions
+AI はタスク開始時に以下の順で参照する:
 
-開発フロー・命名規則・コードレビュー手順は `CONTRIBUTING.md` を参照する。
+1. `README.md`（概要・セットアップ）
+2. `CONTRIBUTING.md`（開発フロー・命名規則・レビューチェックリスト）
+
+必要に応じて以下を参照する（順不同）:
+- `docs/architecture.md`（モジュール・コンポーネント構造）
+- `docs/file-map.md`（ファイルレベルの依存関係 ※情報が足りない・古い場合は適宜探索し、追記・更新する）
+- `docs/specification.md`（機能仕様・データフロー）
+- `docs/ui-design.md`（UI 設計・コンポーネント仕様）
+
 不明点は `docs/dev-charter/CHARTER_INDEX.md` → 該当ファイルの順で参照する。
 
 ---
