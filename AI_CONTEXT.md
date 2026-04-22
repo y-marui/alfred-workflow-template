@@ -4,6 +4,17 @@
 > AIツールはセッション開始時にこのファイルを読むことで、憲章全体を参照しなくても
 > プロジェクトの方針を把握できます。
 
+## AIセッション開始時の参照順
+
+1. `README.md` — 概要・セットアップ・使い方（人間向け）
+2. `docs/architecture.md` — モジュール・コンポーネント構造（人間・AI共用）
+3. `docs/file-map.md` — ファイルレベルの依存関係（人間・AI共用）
+4. `docs/specification.md` — 機能仕様・データフロー（人間・AI共用）
+5. このファイル（`AI_CONTEXT.md`）— AI 固有の指示・開発ルール・guardrails・design decisions
+
+開発フロー・命名規則・コードレビュー手順は `CONTRIBUTING.md` を参照する。
+不明点は `docs/dev-charter/CHARTER_INDEX.md` → 該当ファイルの順で参照する。
+
 ---
 
 ## Project Overview
@@ -141,7 +152,7 @@ OSS プロジェクトのため、**公開面は英語を主言語**とする。
 - `main` に到達するコミットは可能な限り他の開発者がレビューする（個人開発の場合は PR を経由してセルフレビューする）
 - 認証・認可・暗号化・データアクセスに関わる変更はセキュリティレビューを必須とする
 
-詳細: `SECURITY.md`、`docs/dev-charter/SECURITY_POLICY.md`
+詳細: `CONTRIBUTING.md`（Security セクション）、`docs/dev-charter/SECURITY_POLICY.md`
 
 ### UIガイドライン（UI_GUIDELINES）
 
@@ -231,6 +242,8 @@ Alfred が受け付ける category 文字列:
 - `conftest.py` が Alfred 環境変数を tmp ディレクトリに自動設定する
 - Alfred SDK ヘルパーのテストは `tests/test_alfred.py`
 
+詳細な開発フロー・命名規則・コードレビュー手順は `CONTRIBUTING.md` を参照する。
+
 ### Python 開発環境（PYTHON_TOOLCHAIN）
 
 | 役割 | ツール |
@@ -271,6 +284,8 @@ Alfred からスクリプトを実行する際は `use_uv` 変数で実行方法
 - すべての public 関数に型ヒント必須
 - 各モジュール先頭に `from __future__ import annotations`
 - mypy strict モード（`pyproject.toml` 参照）
+
+命名規則・コミットメッセージ形式・PR チェックリストは `CONTRIBUTING.md` を参照する。
 
 ### パフォーマンス
 
@@ -316,33 +331,9 @@ Alfred からスクリプトを実行する際は `use_uv` 変数で実行方法
 
 ---
 
-## 開発コマンド
+## 開発コマンド・リリース手順
 
-```bash
-make install          # dev 依存関係をインストール
-make run Q="search foo"  # Alfred をローカルでシミュレート
-make test             # テスト実行
-make lint             # ruff チェック
-make format           # ruff format（フォーマット適用）
-make typecheck        # mypy
-make build            # dist/*.alfredworkflow を生成
-make vendor           # workflow/vendor/ を更新
-```
-
-### コマンドの追加手順
-
-1. `src/app/commands/my_cmd.py` を作成（`handle(args: str) -> None` を実装）
-2. `src/app/core.py` に登録: `router.register("my")(my_cmd.handle)`
-3. `tests/test_commands.py` にテストを追加
-
-## リリース手順
-
-```bash
-# pyproject.toml のバージョンを更新
-git tag v1.2.3
-git push --tags
-# GitHub Actions が .alfredworkflow を生成して GitHub Release を作成
-```
+開発フロー・コマンド一覧・リリース手順は `CONTRIBUTING.md` を参照する。
 
 ---
 
