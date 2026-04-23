@@ -36,7 +36,20 @@
 - Python 3.9+
 - [pre-commit](https://pre-commit.com/) (for security hooks)
 
-## Quick Start (developers)
+## Quick Start
+
+### Using this template
+
+1. Click **"Use this template"** → **"Create a new repository"** on GitHub
+2. Clone your new repository and open it in your AI tool
+3. Tell the AI: "Run the initial setup from AI_CONTEXT.md" — it will:
+   - Apply GitHub repository settings
+   - Rename `README_TEMPLATE.md` → `README.md` and `README_TEMPLATE-jp.md` → `README-jp.md`
+   - Replace `{user}`, `{repo}`, `{keyword}` placeholders
+   - Randomize the dev-charter cron schedule
+4. Customize the workflow (see `DEVELOPING.md`)
+
+### Development (this template)
 
 ```bash
 git clone https://github.com/yourname/alfred-workflow-template
@@ -153,6 +166,8 @@ This template is configured for AI-assisted development.
 See [`AI_CONTEXT.md`](AI_CONTEXT.md) and [`CLAUDE.md`](CLAUDE.md) for session context.
 
 ## Customizing This Template
+
+After running the initial setup (see Quick Start above), customize the workflow:
 
 1. Edit `workflow/info.plist`:
    - Replace `bundleid` with your bundle ID (`com.yourname.workflowname`)

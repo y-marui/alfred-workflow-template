@@ -36,7 +36,20 @@
 - Python 3.9+
 - [pre-commit](https://pre-commit.com/)（セキュリティフック用）
 
-## Quick Start (developers)
+## Quick Start
+
+### このテンプレートを使う
+
+1. GitHub で **"Use this template"** → **"Create a new repository"** をクリック
+2. 新しいリポジトリをクローンして AI ツールで開く
+3. AI に「AI_CONTEXT.md の初期セットアップを実行して」と伝える — AI が以下を実行します:
+   - GitHub リポジトリ設定を適用
+   - `README_TEMPLATE.md` → `README.md`、`README_TEMPLATE-jp.md` → `README-jp.md` にリネーム
+   - `{user}`、`{repo}`、`{keyword}` プレースホルダを置換
+   - dev-charter の cron スケジュールをランダム化
+4. ワークフローをカスタマイズする（`DEVELOPING.md` 参照）
+
+### 開発（このテンプレート自体）
 
 ```bash
 git clone https://github.com/yourname/alfred-workflow-template
@@ -153,6 +166,8 @@ alfred-workflow-template/
 セッションコンテキスト: [`AI_CONTEXT.md`](AI_CONTEXT.md)、[`CLAUDE.md`](CLAUDE.md)
 
 ## Customizing This Template
+
+上記 Quick Start の初期セットアップが完了したら、ワークフローをカスタマイズします:
 
 1. `workflow/info.plist` を編集:
    - `bundleid` を自分のバンドル ID に変更（例: `com.yourname.workflowname`）
