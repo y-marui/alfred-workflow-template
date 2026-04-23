@@ -6,6 +6,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![CI](https://github.com/y-marui/alfred-workflow-template/actions/workflows/ci.yml/badge.svg)](https://github.com/y-marui/alfred-workflow-template/actions/workflows/ci.yml)
 [![Charter Check](https://github.com/y-marui/alfred-workflow-template/actions/workflows/dev-charter-check.yml/badge.svg)](https://github.com/y-marui/alfred-workflow-template/actions/workflows/dev-charter-check.yml)
+[![GitHub Sponsors](https://img.shields.io/github/sponsors/y-marui)](https://github.com/sponsors/y-marui)
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?logo=buy-me-a-coffee&logoColor=black)](https://www.buymeacoffee.com/y-marui)
 
 | 項目 | 内容 |
 |---|---|
@@ -186,13 +188,6 @@ git tag v1.2.3
 git push --tags
 # GitHub Actions が .alfredworkflow をビルドして GitHub Release を作成
 ```
-
-## Support
-
-このテンプレートが役に立ったら、サポートしていただけると嬉しいです。
-
-- [Buy Me a Coffee](https://www.buymeacoffee.com/y-marui)
-- [GitHub Sponsors](https://github.com/sponsors/y-marui)
 
 ## License
 
