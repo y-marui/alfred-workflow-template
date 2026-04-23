@@ -9,9 +9,10 @@
 AI はタスク開始時に以下の順で参照する:
 
 1. `README.md`（概要・セットアップ）
-2. `CONTRIBUTING.md`（開発フロー・命名規則・レビューチェックリスト）
+2. `DEVELOPING.md`（ビルド・実装規約・命名規則）
 
 必要に応じて以下を参照する（順不同）:
+- `CONTRIBUTING.md`（PR・Issue ルール）
 - `docs/architecture.md`（モジュール・コンポーネント構造）
 - `docs/file-map.md`（ファイルレベルの依存関係 ※情報が足りない・古い場合は適宜探索し、追記・更新する）
 - `docs/specification.md`（機能仕様・データフロー）
@@ -87,6 +88,7 @@ scripts/        ← build.sh / dev.sh / release.sh / vendor.sh
 #### 作業スタンス
 - 大きな変更前に方針を説明してから着手する
 - **不要な依存追加禁止** — 既存の依存で解決できないか先に検討する
+- **ドキュメント同期** — 仕様・ルール・構成に変更が生じたとき、変更と同じ作業内で関連ドキュメントを更新する（対象: `docs/` 内ファイル、`AI_CONTEXT.md`、`README.md` 等）
 
 #### 憲章の参照方法（Charter Lookup）
 
@@ -192,6 +194,25 @@ Alfred ワークフローは現時点では UI テキストのローカライゼ
 
 ## Project-Specific Rules
 
+### テンプレートユーザー向け初期セットアップ（INITIAL_SETUP）
+
+このリポジトリを GitHub テンプレートとして使用して新しいプロジェクトを作成した場合、AI は以下の手順を実行する。
+ユーザーから「テンプレートから始める」「初期セットアップ」などの指示を受けたときに実行する。
+
+1. **GitHub リポジトリ設定を最優先で適用する** — テンプレートからの作成時はすべての設定が初期化されるため   `docs/dev-charter/topics/GITHUB_SETTINGS.md` を読み、`gh` コマンドまたは GitHub UI から設定を適用する
+
+2. **README をリネームする**
+   - `README_TEMPLATE-jp.md` → `README-jp.md`（旧 `README-jp.md` を削除）
+   - `README_TEMPLATE.md` → `README.md`（旧 `README.md` を削除）
+
+3. **プレースホルダを置換する**（CI バッジ・dev-charter バッジを含む）
+   - `{user}` / `{repo}` → このプロジェクトのリポジトリ情報（`git remote get-url origin` から取得）
+   - `{keyword}` → Alfred のトリガーキーワード
+   - 対象ファイル: `README.md`、`README-jp.md`
+
+4. **cron スケジュールをランダム化する**（`.github/workflows/dev-charter-check.yml` が存在する場合）
+   - 複数プロジェクトが同時刻に実行されないよう、曜日・時・分をランダムな値に変更する
+
 ### テンプレートからプロジェクトへの移行（TEMPLATE_MIGRATION）
 
 このテンプレートから新しいワークフローを作成した場合、AI は以下の手順で `workflow/info.plist` を更新する。
@@ -246,7 +267,7 @@ Alfred が受け付ける category 文字列:
 - `conftest.py` が Alfred 環境変数を tmp ディレクトリに自動設定する
 - Alfred SDK ヘルパーのテストは `tests/test_alfred.py`
 
-詳細な開発フロー・命名規則・コードレビュー手順は `CONTRIBUTING.md` を参照する。
+詳細な開発フロー・命名規則・コードレビュー手順は `DEVELOPING.md` を参照する。
 
 ### Python 開発環境（PYTHON_TOOLCHAIN）
 

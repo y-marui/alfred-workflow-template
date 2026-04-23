@@ -4,9 +4,10 @@
 > For the Japanese canonical version, see [README-jp.md](README-jp.md).
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-<!-- TODO: Replace the CI badge URL (both href and src) with your repository URL. See "Customizing this template" below. -->
 [![CI](https://github.com/y-marui/alfred-workflow-template/actions/workflows/ci.yml/badge.svg)](https://github.com/y-marui/alfred-workflow-template/actions/workflows/ci.yml)
 [![Charter Check](https://github.com/y-marui/alfred-workflow-template/actions/workflows/dev-charter-check.yml/badge.svg)](https://github.com/y-marui/alfred-workflow-template/actions/workflows/dev-charter-check.yml)
+[![GitHub Sponsors](https://img.shields.io/github/sponsors/y-marui)](https://github.com/sponsors/y-marui)
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?logo=buy-me-a-coffee&logoColor=black)](https://www.buymeacoffee.com/y.marui)
 
 | Field | Value |
 |---|---|
@@ -36,7 +37,20 @@
 - Python 3.9+
 - [pre-commit](https://pre-commit.com/) (for security hooks)
 
-## Quick Start (developers)
+## Quick Start
+
+### Using this template
+
+1. Click **"Use this template"** → **"Create a new repository"** on GitHub
+2. Clone your new repository and open it in your AI tool
+3. Tell the AI: "Run the initial setup from AI_CONTEXT.md" — it will:
+   - Apply GitHub repository settings
+   - Rename `README_TEMPLATE.md` → `README.md` and `README_TEMPLATE-jp.md` → `README-jp.md`
+   - Replace `{user}`, `{repo}`, `{keyword}` placeholders
+   - Randomize the dev-charter cron schedule
+4. Customize the workflow (see `DEVELOPING.md`)
+
+### Development (this template)
 
 ```bash
 git clone https://github.com/yourname/alfred-workflow-template
@@ -154,6 +168,8 @@ See [`AI_CONTEXT.md`](AI_CONTEXT.md) and [`CLAUDE.md`](CLAUDE.md) for session co
 
 ## Customizing This Template
 
+After running the initial setup (see Quick Start above), customize the workflow:
+
 1. Edit `workflow/info.plist`:
    - Replace `bundleid` with your bundle ID (`com.yourname.workflowname`)
    - Replace the `keyword` (`wf`) with your trigger keyword
@@ -172,13 +188,6 @@ git tag v1.2.3
 git push --tags
 # GitHub Actions builds .alfredworkflow and creates a GitHub Release
 ```
-
-## Support
-
-If this template saves you time, support is appreciated.
-
-- [Buy Me a Coffee](https://www.buymeacoffee.com/YOUR_USERNAME)
-- [GitHub Sponsors](https://github.com/sponsors/YOUR_USERNAME)
 
 ## License
 

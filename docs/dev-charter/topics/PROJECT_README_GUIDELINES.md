@@ -108,7 +108,8 @@
 | `[YEAR]` | 現在の年 | `LICENSE` |
 | `[AUTHOR]` | 著作権者名 | `LICENSE` |
 | `[USERNAME]` | GitHub / Buy Me a Coffee ユーザー名 | `.github/FUNDING.yml` |
-| `{user}` / `{repo}` / `{workflow}` | このプロジェクトのリポジトリ情報 | `README-jp.md`・`README.md`（CI バッジ） |
+| `{user}` / `{repo}` / `{workflow}` | このプロジェクトのリポジトリ情報 | `README-jp.md`・`README.md`（CI バッジ・Sponsors バッジ） |
+| `{bmc_username}` | Buy Me a Coffee ユーザー名 | `README-jp.md`・`README.md`（BMC バッジ） |
 
 ### License
 

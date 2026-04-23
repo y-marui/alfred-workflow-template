@@ -4,9 +4,10 @@
 > 英語版（参照）は [README.md](README.md) を参照してください。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-<!-- TODO: CI バッジのリンク先と画像 URL（href と src の両方）を自分のリポジトリ URL に書き換えること。「このテンプレートのカスタマイズ手順」を参照。 -->
 [![CI](https://github.com/y-marui/alfred-workflow-template/actions/workflows/ci.yml/badge.svg)](https://github.com/y-marui/alfred-workflow-template/actions/workflows/ci.yml)
 [![Charter Check](https://github.com/y-marui/alfred-workflow-template/actions/workflows/dev-charter-check.yml/badge.svg)](https://github.com/y-marui/alfred-workflow-template/actions/workflows/dev-charter-check.yml)
+[![GitHub Sponsors](https://img.shields.io/github/sponsors/y-marui)](https://github.com/sponsors/y-marui)
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?logo=buy-me-a-coffee&logoColor=black)](https://www.buymeacoffee.com/y.marui)
 
 | 項目 | 内容 |
 |---|---|
@@ -36,7 +37,20 @@
 - Python 3.9+
 - [pre-commit](https://pre-commit.com/)（セキュリティフック用）
 
-## Quick Start (developers)
+## Quick Start
+
+### Using this template
+
+1. GitHub で **"Use this template"** → **"Create a new repository"** をクリック
+2. 新しいリポジトリをクローンして AI ツールで開く
+3. AI に「AI_CONTEXT.md の初期セットアップを実行して」と伝える — AI が以下を実行します:
+   - GitHub リポジトリ設定を適用
+   - `README_TEMPLATE.md` → `README.md`、`README_TEMPLATE-jp.md` → `README-jp.md` にリネーム
+   - `{user}`、`{repo}`、`{keyword}` プレースホルダを置換
+   - dev-charter の cron スケジュールをランダム化
+4. ワークフローをカスタマイズする（`DEVELOPING.md` 参照）
+
+### Development (this template)
 
 ```bash
 git clone https://github.com/yourname/alfred-workflow-template
@@ -63,7 +77,7 @@ make build
 
 Alfred を開いて `wf` に続けてスペースを入力します。
 
-### 検索（デフォルト）
+### Search (default)
 
 ```
 wf <query>
@@ -108,7 +122,7 @@ wf help
 - API 呼び出しを最小化するため、結果は 5 分間キャッシュされます。
 - `⌘,` で Alfred のワークフロー設定にアクセスできます。
 
-### トラブルシューティング
+### Troubleshooting
 
 **結果が表示されない場合**
 - Alfred のデバッガーを確認: Alfred を開いて `⌘D`
@@ -154,6 +168,8 @@ alfred-workflow-template/
 
 ## Customizing This Template
 
+上記 Quick Start の初期セットアップが完了したら、ワークフローをカスタマイズします:
+
 1. `workflow/info.plist` を編集:
    - `bundleid` を自分のバンドル ID に変更（例: `com.yourname.workflowname`）
    - キーワード（`wf`）を自分のトリガーキーワードに変更
@@ -172,13 +188,6 @@ git tag v1.2.3
 git push --tags
 # GitHub Actions が .alfredworkflow をビルドして GitHub Release を作成
 ```
-
-## Support
-
-このテンプレートが役に立ったら、サポートしていただけると嬉しいです。
-
-- [Buy Me a Coffee](https://www.buymeacoffee.com/YOUR_USERNAME)
-- [GitHub Sponsors](https://github.com/sponsors/YOUR_USERNAME)
 
 ## License
 
