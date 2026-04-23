@@ -4,7 +4,6 @@
 > For the Japanese canonical version, see [README-jp.md](README-jp.md).
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-<!-- TODO: Replace the CI badge URL (both href and src) with your repository URL. See "Customizing this template" below. -->
 [![CI](https://github.com/y-marui/alfred-workflow-template/actions/workflows/ci.yml/badge.svg)](https://github.com/y-marui/alfred-workflow-template/actions/workflows/ci.yml)
 [![Charter Check](https://github.com/y-marui/alfred-workflow-template/actions/workflows/dev-charter-check.yml/badge.svg)](https://github.com/y-marui/alfred-workflow-template/actions/workflows/dev-charter-check.yml)
 
@@ -192,8 +191,8 @@ git push --tags
 
 If this template saves you time, support is appreciated.
 
-- [Buy Me a Coffee](https://www.buymeacoffee.com/YOUR_USERNAME)
-- [GitHub Sponsors](https://github.com/sponsors/YOUR_USERNAME)
+- [Buy Me a Coffee](https://www.buymeacoffee.com/y-marui)
+- [GitHub Sponsors](https://github.com/sponsors/y-marui)
 
 ## License
 

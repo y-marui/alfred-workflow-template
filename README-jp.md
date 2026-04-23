@@ -4,7 +4,6 @@
 > 英語版（参照）は [README.md](README.md) を参照してください。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-<!-- TODO: CI バッジのリンク先と画像 URL（href と src の両方）を自分のリポジトリ URL に書き換えること。「このテンプレートのカスタマイズ手順」を参照。 -->
 [![CI](https://github.com/y-marui/alfred-workflow-template/actions/workflows/ci.yml/badge.svg)](https://github.com/y-marui/alfred-workflow-template/actions/workflows/ci.yml)
 [![Charter Check](https://github.com/y-marui/alfred-workflow-template/actions/workflows/dev-charter-check.yml/badge.svg)](https://github.com/y-marui/alfred-workflow-template/actions/workflows/dev-charter-check.yml)
 
@@ -38,7 +37,7 @@
 
 ## Quick Start
 
-### このテンプレートを使う
+### Using this template
 
 1. GitHub で **"Use this template"** → **"Create a new repository"** をクリック
 2. 新しいリポジトリをクローンして AI ツールで開く
@@ -49,7 +48,7 @@
    - dev-charter の cron スケジュールをランダム化
 4. ワークフローをカスタマイズする（`DEVELOPING.md` 参照）
 
-### 開発（このテンプレート自体）
+### Development (this template)
 
 ```bash
 git clone https://github.com/yourname/alfred-workflow-template
@@ -76,7 +75,7 @@ make build
 
 Alfred を開いて `wf` に続けてスペースを入力します。
 
-### 検索（デフォルト）
+### Search (default)
 
 ```
 wf <query>
@@ -121,7 +120,7 @@ wf help
 - API 呼び出しを最小化するため、結果は 5 分間キャッシュされます。
 - `⌘,` で Alfred のワークフロー設定にアクセスできます。
 
-### トラブルシューティング
+### Troubleshooting
 
 **結果が表示されない場合**
 - Alfred のデバッガーを確認: Alfred を開いて `⌘D`
@@ -192,8 +191,8 @@ git push --tags
 
 このテンプレートが役に立ったら、サポートしていただけると嬉しいです。
 
-- [Buy Me a Coffee](https://www.buymeacoffee.com/YOUR_USERNAME)
-- [GitHub Sponsors](https://github.com/sponsors/YOUR_USERNAME)
+- [Buy Me a Coffee](https://www.buymeacoffee.com/y-marui)
+- [GitHub Sponsors](https://github.com/sponsors/y-marui)
 
 ## License
 
