@@ -90,6 +90,14 @@ scripts/        ← build.sh / dev.sh / release.sh / vendor.sh
 - **不要な依存追加禁止** — 既存の依存で解決できないか先に検討する
 - **ドキュメント同期** — 仕様・ルール・構成に変更が生じたとき、変更と同じ作業内で関連ドキュメントを更新する（対象: `docs/` 内ファイル、`AI_CONTEXT.md`、`README.md` 等）
 
+#### dev-charter 変更ルール（dev-charter Modification Rules）
+
+`docs/dev-charter/` 配下のファイルを**直接編集しない**。
+
+- 変更が必要な場合は dev-charter リポジトリ本体に Issue を立て、`git subtree pull` でアップデートを取り込む
+- `git subtree pull` によるアップデートのみ許可する
+- このプロジェクト固有のルールは `AI_CONTEXT.md` または専用ファイルに記載する
+
 #### 憲章の参照方法（Charter Lookup）
 
 不明点が憲章に関係する場合は**全ファイルを検索せず**、以下の手順で参照する:
@@ -208,6 +216,7 @@ Alfred ワークフローは現時点では UI テキストのローカライゼ
 3. **プレースホルダを置換する**（CI バッジ・dev-charter バッジを含む）
    - `{user}` / `{repo}` → このプロジェクトのリポジトリ情報（`git remote get-url origin` から取得）
    - `{keyword}` → Alfred のトリガーキーワード
+   - `{bmc_username}` → Buy Me a Coffee のユーザー名（`.github/FUNDING.yml` と合わせて置換）
    - 対象ファイル: `README.md`、`README-jp.md`
 
 4. **cron スケジュールをランダム化する**（`.github/workflows/dev-charter-check.yml` が存在する場合）
@@ -321,7 +330,7 @@ Alfred からスクリプトを実行する際は `use_uv` 変数で実行方法
 ### 依存管理
 
 - ランタイム依存 → `requirements.txt` → `workflow/vendor/` にベンダリング（`make vendor`）
-- 開発依存 → `pyproject.toml [project.optional-dependencies.dev]`
+- 開発依存 → `pyproject.toml [dependency-groups]`（uv 推奨形式）
 - ランタイム依存は最小限に保つ（パッケージ追加 = ワークフローサイズ増加）
 
 ---
