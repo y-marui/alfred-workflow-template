@@ -64,5 +64,6 @@ This is a workflow template. Common areas of concern:
 | `detect-private-key` | SSH/TLS private key headers |
 | `no-commit-dotenv` | `.env` files accidentally staged |
 | `check-added-large-files` | Files over 500 KB |
+| `check-markdown-heading-language` | Non-English (e.g. Japanese) Markdown section headings |
 
 These hooks run on every commit (pre-commit) and in CI (`security` job).

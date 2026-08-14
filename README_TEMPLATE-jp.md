@@ -39,7 +39,7 @@ make build
 
 Alfred を開いて `{keyword}` に続けてスペースを入力します。
 
-### 検索（デフォルト）
+### Search (default)
 
 ```
 {keyword} <query>
