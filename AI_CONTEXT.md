@@ -221,9 +221,6 @@ Alfred ワークフローは現時点では UI テキストのローカライゼ
    - `{bmc_username}` → Buy Me a Coffee のユーザー名（`.github/FUNDING.yml` と合わせて置換）
    - 対象ファイル: `README.md`、`README-jp.md`
 
-4. **cron スケジュールをランダム化する**（`.github/workflows/dev-charter-check.yml` が存在する場合）
-   - 複数プロジェクトが同時刻に実行されないよう、曜日・時・分をランダムな値に変更する
-
 ### Template-to-Project Migration (TEMPLATE_MIGRATION)
 
 このテンプレートから新しいワークフローを作成した場合、AI は以下の手順で `workflow/info.plist` を更新する。
