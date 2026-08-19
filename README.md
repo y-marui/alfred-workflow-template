@@ -50,6 +50,9 @@
    - Randomize the dev-charter cron schedule
 4. Customize the workflow (see `DEVELOPING.md`)
 
+> **Note:** When rewriting the README, the Charter Check badge (for `dev-charter-check.yml`)
+> is easy to lose. Verify it's still present in both `README.md` and `README-jp.md`.
+
 ### Development (this template)
 
 ```bash

@@ -50,6 +50,9 @@
    - dev-charter の cron スケジュールをランダム化
 4. ワークフローをカスタマイズする（`DEVELOPING.md` 参照）
 
+> **Note:** README を書き換える際、Charter Check バッジ（`dev-charter-check.yml` の badge）が
+> 消えやすい。`README.md` / `README-jp.md` の両方に残っているか確認する。
+
 ### Development (this template)
 
 ```bash
