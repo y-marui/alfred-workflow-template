@@ -19,6 +19,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Configuration Builder settings; the general mechanism reference moved
   to `docs/alfred-workflow-notes/configuration-builder.md`
 
+### Fixed
+
+- `docs/alfred-workflow-notes/README.md`'s "Installing in a consuming
+  project" sample commands: a plain `git subtree add`/`pull` against
+  `alfred-workflow-template` pulled in that repo's entire root instead of
+  just `docs/alfred-workflow-notes/`, since (unlike `docs/dev-charter/`)
+  the shared content here lives in a subdirectory, not at the upstream
+  repo's root. Both the first-time install and the `update-workflow-notes`
+  Makefile target now capture `git subtree split`'s output SHA directly
+  (no named branch, so nothing that can collide with a branch the
+  consuming repo already has, or needs cleanup afterwards) and run under
+  `set -e` (so a failed split aborts before `merge` runs against a stale
+  or empty SHA) — verified end-to-end in a sandbox repo (first-time
+  install, idempotent re-run, a real update, and a forced split failure
+  leaving the stash untouched rather than popped onto a broken state)
+
 ## [0.1.0] - 2024-01-01
 
 ### Added
