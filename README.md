@@ -155,7 +155,8 @@ alfred-workflow-template/
 | [docs/file-map.md](docs/file-map.md) | File-level dependency map |
 | [docs/specification.md](docs/specification.md) | Feature specification and data flow |
 | [docs/ui-design.md](docs/ui-design.md) | Alfred result item UI conventions |
-| [docs/configuration-builder.md](docs/configuration-builder.md) | Alfred Configuration Builder reference |
+| [docs/configuration-builder.md](docs/configuration-builder.md) | This project's Configuration Builder settings |
+| [docs/alfred-workflow-notes/](docs/alfred-workflow-notes/README.md) | Cross-project Alfred workflow dev reference (canonical source for other projects, via `git subtree`) |
 
 ## AI-Assisted Development
 

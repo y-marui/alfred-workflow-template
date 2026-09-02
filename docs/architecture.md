@@ -112,7 +112,8 @@ The entire `.build/` directory is zipped to `dist/<name>-<version>.alfredworkflo
 ## Alfred Configuration Builder (`userconfigurationconfig`)
 
 Alfred 5 の Configuration Builder は `info.plist` の `userconfigurationconfig` キーで定義する。
-利用可能な全型・各キーの詳細は [`docs/configuration-builder.md`](configuration-builder.md) を参照。
+利用可能な全型・各キーの詳細は [`docs/alfred-workflow-notes/configuration-builder.md`](alfred-workflow-notes/configuration-builder.md)、
+このプロジェクトの設定項目は [`docs/configuration-builder.md`](configuration-builder.md) を参照。
 
 ### Passing Variables
 

@@ -155,7 +155,8 @@ alfred-workflow-template/
 | [docs/file-map.md](docs/file-map.md) | ファイルレベルの依存関係マップ |
 | [docs/specification.md](docs/specification.md) | 機能仕様・データフロー |
 | [docs/ui-design.md](docs/ui-design.md) | Alfred 結果アイテムの UI 設計指針 |
-| [docs/configuration-builder.md](docs/configuration-builder.md) | Alfred Configuration Builder リファレンス |
+| [docs/configuration-builder.md](docs/configuration-builder.md) | このプロジェクトの Configuration Builder 設定 |
+| [docs/alfred-workflow-notes/](docs/alfred-workflow-notes/README.md) | Alfred workflow開発の汎用リファレンス(他プロジェクトへの正本。`git subtree`で配布) |
 
 ## AI-Assisted Development
 
