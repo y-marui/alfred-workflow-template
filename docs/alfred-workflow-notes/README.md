@@ -78,11 +78,12 @@ set -euo pipefail
 PREFIX="docs/alfred-workflow-notes"
 
 # `git subtree`'s squash commit is made via `git commit-tree` and never
-# touches this hook, but the merge commit that joins it into the branch
-# (the last step of `add`/`pull`/`merge`) is a normal commit and DOES run
-# it. Skip only when MERGE_HEAD carries the `git-subtree-dir: $PREFIX`
-# trailer git subtree itself writes — a bare "mid-merge" check would also
-# exempt an unrelated merge that happens to touch this prefix.
+# touches this hook. A *clean* join merge fires `pre-merge-commit`, not
+# this hook, either — only when the join needs manual conflict resolution
+# does finishing it with a normal `git commit` reach this hook. Skip only
+# when MERGE_HEAD carries the `git-subtree-dir: $PREFIX` trailer git
+# subtree itself writes — a bare "mid-merge" check would also exempt an
+# unrelated merge that happens to touch this prefix.
 MERGE_HEAD_PATH=$(git rev-parse --git-path MERGE_HEAD 2>/dev/null || true)
 if [ -n "$MERGE_HEAD_PATH" ] && [ -f "$MERGE_HEAD_PATH" ]; then
   MERGE_HEAD_SHA=$(cat "$MERGE_HEAD_PATH")
