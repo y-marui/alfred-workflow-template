@@ -18,6 +18,11 @@ AI はタスク開始時に以下の順で参照する:
 - `docs/specification.md`（機能仕様・データフロー）
 - `docs/ui-design.md`（UI 設計・コンポーネント仕様）
 
+Alfred ワークフロー開発の汎用知識（Configuration Builder の仕組み、`info.plist` オブジェクトスキーマ）は
+`docs/alfred-workflow-notes/` を参照する。このディレクトリはこのプロジェクトが正本であり、
+他の Alfred ワークフロープロジェクトへ `git subtree` で配布される（`docs/dev-charter/` と同じパターン）。
+詳細は `docs/alfred-workflow-notes/README.md` を参照。
+
 不明点は `docs/dev-charter/CHARTER_INDEX.md` → 該当ファイルの順で参照する。
 
 ---
