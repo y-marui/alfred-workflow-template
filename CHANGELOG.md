@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `docs/alfred-workflow-notes/` — canonical, subtree-pullable reference for
+  cross-project Alfred workflow development knowledge (Configuration
+  Builder mechanism, `info.plist` object schema)
+
+### Changed
+
+- `docs/configuration-builder.md` now covers only this project's own
+  Configuration Builder settings; the general mechanism reference moved
+  to `docs/alfred-workflow-notes/configuration-builder.md`
+
 ## [0.1.0] - 2024-01-01
 
 ### Added
