@@ -76,6 +76,21 @@ mirroring this repo's `scripts/check-charter-subtree-edit.sh`:
 #!/usr/bin/env bash
 set -euo pipefail
 PREFIX="docs/alfred-workflow-notes"
+
+# `git subtree`'s squash commit is made via `git commit-tree` and never
+# touches this hook, but the merge commit that joins it into the branch
+# (the last step of `add`/`pull`/`merge`) is a normal commit and DOES run
+# it. Skip only when MERGE_HEAD carries the `git-subtree-dir: $PREFIX`
+# trailer git subtree itself writes — a bare "mid-merge" check would also
+# exempt an unrelated merge that happens to touch this prefix.
+MERGE_HEAD_PATH=$(git rev-parse --git-path MERGE_HEAD 2>/dev/null || true)
+if [ -n "$MERGE_HEAD_PATH" ] && [ -f "$MERGE_HEAD_PATH" ]; then
+  MERGE_HEAD_SHA=$(cat "$MERGE_HEAD_PATH")
+  if git log -1 --format=%B "$MERGE_HEAD_SHA" 2>/dev/null | grep -qx "git-subtree-dir: ${PREFIX}"; then
+    exit 0
+  fi
+fi
+
 CHANGED=$(git diff --cached --name-only -- "$PREFIX" || true)
 [ -n "$CHANGED" ] || exit 0
 echo "error: ${PREFIX}/ must not be edited directly."
