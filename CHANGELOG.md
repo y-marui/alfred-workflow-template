@@ -34,6 +34,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   or empty SHA) — verified end-to-end in a sandbox repo (first-time
   install, idempotent re-run, a real update, and a forced split failure
   leaving the stash untouched rather than popped onto a broken state)
+- `scripts/check-charter-subtree-edit.sh` (and its mirrored sample in
+  `docs/alfred-workflow-notes/README.md`) rejected the merge commit that
+  finalizes a `git subtree add`/`pull`/`merge` whenever that merge needed
+  manual conflict resolution, since a plain `git commit` runs the
+  pre-commit hook and the old check couldn't tell that apart from a direct
+  edit under the subtree — getting the working tree stuck mid-merge. Now
+  skipped only when `MERGE_HEAD` carries the `git-subtree-dir: $PREFIX`
+  trailer `git subtree` itself writes, so an unrelated merge that happens
+  to touch the same prefix is still blocked — verified in a sandbox repo
+  (a real conflicting subtree pull now finalizes; a standalone direct edit
+  and an unrelated merge touching the prefix are still rejected)
 
 ## [0.1.0] - 2024-01-01
 
