@@ -18,15 +18,29 @@ projects (including ones generated from this template) pull it in via
 
 ## Installing in a consuming project
 
-Add this directory as a subtree, pulling from this repository:
+This directory lives at `docs/alfred-workflow-notes/` *inside* the
+`alfred-workflow-template` repo, not at that repo's root (unlike
+`docs/dev-charter/`, whose upstream repo root *is* the shared content). A
+plain `git subtree add`/`pull` against `alfred-workflow-template` pulls in
+that repo's entire root — `.github/`, `pyproject.toml`, `uv.lock`, everything
+— not just this subdirectory. Split this subdirectory's history out into a
+throwaway local branch first, then add/merge just that.
+
+First-time install:
 
 ```bash
-git subtree add --prefix=docs/alfred-workflow-notes \
-  https://github.com/y-marui/alfred-workflow-template main --squash
+git remote add alfred-workflow-notes https://github.com/y-marui/alfred-workflow-template
+git fetch alfred-workflow-notes
+git subtree split --prefix=docs/alfred-workflow-notes \
+  --branch workflow-notes-split alfred-workflow-notes/main
+git subtree add --prefix=docs/alfred-workflow-notes workflow-notes-split --squash
+git branch -D workflow-notes-split
 ```
 
 To pull later updates, add a Makefile target mirroring this repo's
-`update-charter` (see [`Makefile`](../../Makefile)):
+`update-charter` (see [`Makefile`](../../Makefile)) — still a single
+`make update-workflow-notes` one-liner for the caller, the split just
+happens inside the target:
 
 ```makefile
 update-workflow-notes:
@@ -38,7 +52,9 @@ update-workflow-notes:
 		git stash push -u -m "update-workflow-notes"; \
 		STASHED=1; \
 	fi; \
-	git subtree pull --prefix=docs/alfred-workflow-notes alfred-workflow-notes main --squash; \
+	git subtree split --prefix=docs/alfred-workflow-notes --branch workflow-notes-split alfred-workflow-notes/main; \
+	git subtree merge --prefix=docs/alfred-workflow-notes workflow-notes-split --squash; \
+	git branch -D workflow-notes-split; \
 	if [ "$$STASHED" = "1" ]; then git stash pop; fi
 ```
 
