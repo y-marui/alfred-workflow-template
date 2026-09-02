@@ -27,9 +27,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   just `docs/alfred-workflow-notes/`, since (unlike `docs/dev-charter/`)
   the shared content here lives in a subdirectory, not at the upstream
   repo's root. Both the first-time install and the `update-workflow-notes`
-  Makefile target now split that subdirectory's history into a throwaway
-  local branch first, then add/merge just that — verified against
-  [alfred-clean-invisible-text#26](https://github.com/y-marui/alfred-clean-invisible-text/pull/26)
+  Makefile target now capture `git subtree split`'s output SHA directly
+  (no named branch, so nothing that can collide with a branch the
+  consuming repo already has, or needs cleanup afterwards) and run under
+  `set -e` (so a failed split aborts before `merge` runs against a stale
+  or empty SHA) — verified end-to-end in a sandbox repo (first-time
+  install, idempotent re-run, a real update, and a forced split failure
+  leaving the stash untouched rather than popped onto a broken state)
 
 ## [0.1.0] - 2024-01-01
 
