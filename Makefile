@@ -121,13 +121,15 @@ clean:
 # Dev Charter
 # ---------------------------------------------------------------------------
 update-charter:
-	git remote | grep -q '^dev-charter$$' || \
-	  git remote add dev-charter https://github.com/y-marui/dev-charter
-	git fetch dev-charter
-	@STASHED=0; \
-	if ! git diff --quiet || ! git diff --cached --quiet || [ -n "$$(git ls-files --others --exclude-standard)" ]; then \
-		git stash push -u -m "update-charter"; \
-		STASHED=1; \
-	fi; \
-	git subtree pull --prefix=docs/dev-charter dev-charter main --squash; \
-	if [ "$$STASHED" = "1" ]; then git stash pop; fi
+	CHARTER_UPDATE_ONLY=1 bash <(curl -fsSL https://raw.githubusercontent.com/y-marui/dev-charter/main/scripts/install.sh)
+
+# ---------------------------------------------------------------------------
+# Alfred Workflow Notes
+#
+# This repo is the *source* of docs/alfred-workflow-notes/ (see
+# scripts/install-workflow-notes.sh), so it has nothing to pull from
+# itself — this target is commented out here and exists only as the
+# reference copy-paste block for the projects that consume it.
+# ---------------------------------------------------------------------------
+# update-workflow-notes:
+# 	bash <(curl -fsSL https://raw.githubusercontent.com/y-marui/alfred-workflow-template/main/scripts/install-workflow-notes.sh)
