@@ -5,21 +5,21 @@
 # `git subtree add`/`pull --squash`.
 #
 # `git subtree` builds its "Squashed content" commit via `git commit-tree`,
-# which never touches this hook. A *clean* join merge (the last step of
-# `add`/`pull`/`merge`) completes via `git merge`, which fires
-# `pre-merge-commit` — not installed here — so this hook doesn't see that
-# either. Only when the join needs manual conflict resolution does the
-# user finish it with a normal `git commit`, which DOES run this hook. An
-# earlier version of this hook assumed subtree bypasses hooks entirely and
-# got stuck mid-merge the first time a real `make update-charter` run hit
-# a conflict.
+# which never touches this hook — but the commit that actually joins that
+# squashed history into the current branch (what `add`/`pull`/`merge` do
+# last) is a real merge commit made via the normal commit machinery, which
+# DOES run pre-commit hooks. An earlier version of this hook assumed
+# subtree bypasses hooks entirely and got the working tree stuck mid-merge
+# the first time a real (conflicting) subtree pull needed a manual
+# `git commit` to finish.
 #
 # Skip the check only when MERGE_HEAD points at a commit carrying a
 # `git-subtree-dir: $PREFIX` trailer — the marker `git subtree` itself
 # writes into the squashed commit it merges in, exact-matching this hook's
 # own prefix. A bare "we're mid-merge" check would exempt any merge,
 # including an unrelated one that happens to also touch a file under the
-# prefix.
+# prefix (e.g. resolving a conflict on a branch where someone edited it
+# directly).
 #
 # Override the subtree path with CHARTER_PREFIX if it was installed
 # somewhere other than the default.
@@ -37,7 +37,7 @@ PREFIX="${CHARTER_PREFIX:-docs/dev-charter}"
 MERGE_HEAD_PATH=$(git rev-parse --git-path MERGE_HEAD 2>/dev/null || true)
 if [ -n "$MERGE_HEAD_PATH" ] && [ -f "$MERGE_HEAD_PATH" ]; then
   MERGE_HEAD_SHA=$(cat "$MERGE_HEAD_PATH")
-  if git log -1 --format=%B "$MERGE_HEAD_SHA" 2>/dev/null | grep -qxF "git-subtree-dir: ${PREFIX}"; then
+  if git log -1 --format=%B "$MERGE_HEAD_SHA" 2>/dev/null | grep -qx "git-subtree-dir: ${PREFIX}"; then
     exit 0
   fi
 fi
