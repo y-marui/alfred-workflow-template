@@ -238,7 +238,7 @@ Alfred ワークフローは現時点では UI テキストのローカライゼ
 
 | フィールド | 取得元 |
 |---|---|
-| `bundleid` | `com.github.<owner>.<repo>` — `git remote get-url origin` から owner/repo を取得 |
+| `bundleid` | `com.<owner>.<repo>` — `git remote get-url origin` から owner/repo を取得 |
 | `description` | `gh repo view <owner>/<repo> --json description --jq '.description'` |
 | `createdby` | `git config user.name` |
 | `category` | ユーザーに選択肢を提示して確認する（下記参照） |
