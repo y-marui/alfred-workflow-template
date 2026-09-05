@@ -370,7 +370,7 @@ Alfred は Script Filter / Run Script ノードからユニバーサル（amd64+
 
 ---
 
-## Development Commands & Release Process
+## Development Commands and Release Process
 
 開発フロー・コマンド一覧・リリース手順は `CONTRIBUTING.md` を参照する。
 
