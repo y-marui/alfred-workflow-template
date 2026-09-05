@@ -75,18 +75,14 @@ Double-click `dist/*.alfredworkflow` to install in Alfred.
 
 ## Usage
 
-Open Alfred and type `wf`.
+Search example shortcuts (repo, docs, issues) via the `tpl` keyword.
 
 ```
-wf          -> list example shortcuts (repo, docs, issues)
-wf <query>  -> filter shortcuts by name
+tpl          -> list example shortcuts (repo, docs, issues)
+tpl <query>  -> filter shortcuts by name
 ```
 
-Press Enter to open the selected shortcut's URL.
-
-| Key | Action |
-|---|---|
-| ↩ Enter | Open the shortcut's URL |
+* <kbd>↩︎</kbd> Open the selected shortcut's URL
 
 ### Troubleshooting
 

@@ -46,7 +46,7 @@
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>keyword</key>
-				<string>wf</string>
+				<string>tpl</string>
 				<key>queuedelaycustom</key>
 				<integer>3</integer>
 				<key>queuedelayimmediatelyinitially</key>
@@ -108,8 +108,8 @@ A starting point for building Alfred workflows in Go.
 
 ## Usage
 
-* wf           — list example shortcuts (repo, docs, issues)
-* wf &lt;query&gt;  — filter shortcuts by name
+* tpl           — list example shortcuts (repo, docs, issues)
+* tpl &lt;query&gt;  — filter shortcuts by name
 
 Replace internal/example + internal/examplecmd with your own domain logic;
 keep internal/scriptfilter and cmd/example-alfred's argv-dispatch shape.</string>

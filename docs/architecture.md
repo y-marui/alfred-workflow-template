@@ -3,14 +3,14 @@
 ## Overview
 
 An Alfred Workflow (Go): `cmd/example-alfred` is the single universal
-(amd64+arm64) binary `workflow/info.plist` invokes. The "wf" Script Filter
+(amd64+arm64) binary `workflow/info.plist` invokes. The "tpl" Script Filter
 node runs it with the query as `$1`, and Alfred's existing native Open URL
 action node opens whichever shortcut's URL the user picks — the binary never
 opens URLs itself.
 
 ```
 Alfred
-  │  keyword "wf" + query
+  │  keyword "tpl" + query
   ▼
 cmd/example-alfred/main.go     ← Alfred boundary; argv dispatch + recover() only
   │
