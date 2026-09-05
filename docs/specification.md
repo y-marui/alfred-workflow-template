@@ -14,7 +14,7 @@ whichever one the user selects.
 
 ### `example` (the only command)
 
-**Trigger:** `wf` or `wf <query>`
+**Trigger:** `tpl` or `tpl <query>`
 
 **Behavior:**
 1. Filter `internal/example.Shortcuts` by whether `query` is a
@@ -46,7 +46,7 @@ whichever one the user selects.
 ## Data Flow
 
 ```
-Alfred input (keyword "wf" + query string)
+Alfred input (keyword "tpl" + query string)
   │
   ▼
 cmd/example-alfred/main.go        reads os.Args[1]

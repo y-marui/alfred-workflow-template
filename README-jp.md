@@ -75,18 +75,14 @@ make build-workflow
 
 ## Usage
 
-Alfred を開いて `wf` と入力します。
+`tpl` キーワードでサンプルショートカット（repo, docs, issues）を検索します。
 
 ```
-wf          -> サンプルショートカット一覧（repo, docs, issues）
-wf <query>  -> 名前でショートカットを絞り込み
+tpl          -> サンプルショートカット一覧（repo, docs, issues）
+tpl <query>  -> 名前でショートカットを絞り込み
 ```
 
-Enter を押すと選択したショートカットの URL を開きます。
-
-| キー | 操作 |
-|---|---|
-| ↩ Enter | ショートカットの URL を開く |
+* <kbd>↩︎</kbd> 選択したショートカットの URL を開く
 
 ### Troubleshooting
 

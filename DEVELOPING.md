@@ -84,7 +84,7 @@ or drag it into Alfred Preferences → Workflows.
 
 1. Build: `make build-workflow`
 2. Install: open `dist/*.alfredworkflow`
-3. Open Alfred, type `wf`
+3. Open Alfred, type `tpl`
 
 During rapid iteration you can symlink `workflow/` to Alfred's workflow directory,
 but `go run ./cmd/example-alfred "query"` is usually faster for logic changes.

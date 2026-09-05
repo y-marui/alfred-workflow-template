@@ -17,6 +17,7 @@ AI はタスク開始時に以下の順で参照する:
 - `docs/file-map.md`（ファイルレベルの依存関係 ※情報が足りない・古い場合は適宜探索し、追記・更新する）
 - `docs/specification.md`（機能仕様・データフロー）
 - `docs/ui-design.md`（UI 設計・コンポーネント仕様）
+- `docs/alfred-gallery-readiness.md`（Alfred Gallery 提出基準のチェックリストと未対応項目）
 
 Alfred ワークフロー開発の汎用知識（Configuration Builder の仕組み、`info.plist` オブジェクトスキーマ）は
 `docs/alfred-workflow-notes/` を参照する。このディレクトリはこのプロジェクトが正本であり、
@@ -225,9 +226,16 @@ Alfred ワークフローは現時点では UI テキストのローカライゼ
 
 3. **プレースホルダを置換する**（CI バッジ・dev-charter バッジを含む）
    - `{user}` / `{repo}` → このプロジェクトのリポジトリ情報（`git remote get-url origin` から取得）
-   - `{keyword}` → Alfred のトリガーキーワード
+   - `{keyword}` → Alfred のトリガーキーワード（Alfred Gallery の基準に合わせ **3文字以上**にする — `topics/alfred/ALFRED_GALLERY.md` 参照）
    - `{bmc_username}` → Buy Me a Coffee のユーザー名（`.github/FUNDING.yml` と合わせて置換）
    - 対象ファイル: `README.md`、`README-jp.md`
+
+4. **アイコンを差し替える** — `workflow/icon.png` はプレースホルダ（1×1px）のまま。
+   256×256px 以上・正方形の実アイコンに差し替える（Alfred Gallery の基準、
+   `docs/alfred-gallery-readiness.md` 参照）
+
+5. **Gallery readiness チェックリストをコピーする** — `docs/alfred-gallery-readiness.md`
+   をこのプロジェクトにも残し、キーワード・アイコン・README の対応状況を更新していく
 
 ### Template-to-Project Migration (TEMPLATE_MIGRATION)
 
@@ -246,20 +254,14 @@ Alfred ワークフローは現時点では UI テキストのローカライゼ
 
 #### category Options
 
-Alfred が受け付ける category 文字列:
-
-- `Tools & Utilities`
-- `Internet`
-- `Files & Folders`
-- `Productivity`
-- `Communication`
-- `Music & Audio`
-- `System`
-- `Games`
-- `Academic`
-- `Development`
+有効な値の一覧は
+[`docs/alfred-workflow-notes/workflow-object-schema.md`](docs/alfred-workflow-notes/workflow-object-schema.md)
+の `category` セクションを参照する（他の Alfred ワークフロープロジェクトとも
+共有する技術リファレンスのため、二重管理しない）。
 
 ユーザーにワークフローの用途を聞き、最も適切な category を提案して確認を取る。
+Alfred Gallery 提出基準（`topics/alfred/ALFRED_GALLERY.md`）でも必須項目 —
+`category` を設定していないプロジェクトを見つけたら移行漏れとして扱う。
 
 #### Update Steps
 
