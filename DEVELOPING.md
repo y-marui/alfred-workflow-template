@@ -2,100 +2,127 @@
 
 This document covers the development workflow, conventions, and guidelines for contributors to this project.
 
-## Development Setup
+## Prerequisites
 
-```bash
-git clone https://github.com/yourname/alfred-workflow-template
-cd alfred-workflow-template
-make install   # installs dev dependencies via uv
-```
-
-**Prerequisites:**
 - macOS (required for Alfred)
-- Python 3.11+ (managed via pyenv)
+- Go (see `go.mod` for the toolchain version)
 - Alfred 5 with Powerpack
 - `jq` (optional, for pretty-printed dev output): `brew install jq`
 - `gh` CLI (required for releases): `brew install gh`
 
-## Development Workflow
-
-### Daily commands
+## Development Setup
 
 ```bash
-make run Q="search foo"   # simulate Alfred locally
-make run Q="open repo"
-make run Q="config"
-make run Q=""
-make test                 # run test suite
-make test-cov             # tests with coverage report
-make lint                 # ruff check
-make format               # ruff format (auto-fix)
-make typecheck            # mypy
-make build                # build dist/*.alfredworkflow
-make vendor               # update workflow/vendor/
+git clone https://github.com/y-marui/alfred-workflow-template
+cd alfred-workflow-template
+go build ./...
 ```
 
-`make run` calls `scripts/dev.sh` which sets all `alfred_workflow_*` env vars to
-temp directories and calls `workflow/scripts/entry.py` with your query.
+## Daily Workflow
 
-### Testing in Alfred
+### Simulate Alfred locally
 
-1. `make build` — generates `dist/*.alfredworkflow`
-2. Double-click the `.alfredworkflow` file to install in Alfred
-3. Open Alfred and type your keyword to verify behavior
+```bash
+go run ./cmd/example-alfred            # all shortcuts
+go run ./cmd/example-alfred "doc"      # filtered
+```
 
-During rapid iteration you can symlink `workflow/` to Alfred's workflow directory,
-but `make run` is usually faster.
+Pipe through `jq` for pretty-printed JSON:
+
+```bash
+go run ./cmd/example-alfred | jq .
+```
+
+### Run tests
+
+```bash
+make test          # go test ./...
+```
+
+### Lint and format
+
+```bash
+make lint          # gofmt -l + go vet
+make fmt           # gofmt -w (auto-fix)
+```
 
 ## Adding a New Command
 
-1. Create `src/app/commands/my_cmd.py` with a `handle(args: str) -> None` function:
+This template ships a single command (`example`). To add another Script Filter
+command:
 
-```python
-from alfred.response import item, output
+1. Add the domain logic to a new `internal/<domain>/` package (stdlib only, Alfred-independent,
+   unit-testable) — see `internal/example/example.go` for the shape to follow.
+2. Add an `internal/<domain>cmd/` package with a function returning `scriptfilter.Response`,
+   following `internal/examplecmd/examplecmd.go`'s shape.
+3. If the workflow needs a second Alfred-invoked binary (e.g. a Script Filter plus a
+   separate Run Script action with a side effect), add another `cmd/<name>-alfred/`
+   directory — see `alfred-note-md-template`'s `cmd/note-md-template-alfred` +
+   `cmd/note-md-template-paste-alfred` for that pattern. For a single command with an
+   optional subcommand (e.g. a `help` case), dispatch with a plain `switch` inside
+   `main.go` instead — see `alfred-password-generator`'s `passgencmd.handleHelp` for
+   the pattern; don't introduce a generic router abstraction for this.
+4. Add tests for both new packages.
+5. Add a Script Filter (and, if it has a side effect, a Run Script) node to
+   `workflow/info.plist`, wired to the new subcommand. Check
+   `docs/alfred-workflow-notes/workflow-object-schema.md` before deciding a feature
+   needs a Go binary at all — an Alfred-native object may already cover it.
+6. Update `docs/specification.md`, `README.md`/`README-jp.md`, and `CHANGELOG.md`.
 
-def handle(args: str) -> None:
-    output([item("My command", f"Args: {args}", arg=args)])
+## Building the Package
+
+```bash
+make build-workflow
 ```
 
-2. Register in `src/app/core.py`:
+Output: `dist/<name>-<version>.alfredworkflow`
 
-```python
-from app.commands import my_cmd
-router.register("my")(my_cmd.handle)
-```
+Install during development: double-click the `.alfredworkflow` file,
+or drag it into Alfred Preferences → Workflows.
 
-3. Add tests in `tests/test_commands.py`.
-4. Update `README.md` Usage section and `workflow/info.plist` keyword help.
+## Testing in Alfred
 
-## Adding a Third-Party Dependency
+1. Build: `make build-workflow`
+2. Install: open `dist/*.alfredworkflow`
+3. Open Alfred, type `wf`
 
-1. Add the package to `vendor-requirements.txt`.
-2. Run `make vendor` to install into `workflow/vendor/`.
-3. Import normally in your code — `entry.py` adds the vendor path to `sys.path`.
-
-> Keep runtime dependencies minimal. Each package increases workflow download size.
+During rapid iteration you can symlink `workflow/` to Alfred's workflow directory,
+but `go run ./cmd/example-alfred "query"` is usually faster for logic changes.
 
 ## Naming Conventions
 
 | Scope | Convention | Example |
 |---|---|---|
-| Python files | `snake_case` | `search_service.py` |
-| Python classes | `PascalCase` | `ExampleService` |
-| Python functions / variables | `snake_case` | `handle`, `cache_ttl` |
-| Public functions | Require type hints | `def handle(args: str) -> None:` |
-| Alfred command names | lowercase | `"search"`, `"open"` |
-| Alfred variable names | `lowercase_with_underscores` | `use_uv`, `log_level` |
+| Go packages | short, lowercase, no underscores | `example`, `examplecmd`, `scriptfilter` |
+| Exported functions / types | `PascalCase` | `Filter`, `Response`, `Item` |
+| Unexported functions / variables | `camelCase` | `writeResponse`, `defaultTTL` |
+| Alfred command names | lowercase | `"example"` |
+| Alfred variable names | `lowercase_with_underscores` | (none currently — add via Config Builder) |
 | Commit messages | Conventional Commits | `feat:`, `fix:`, `docs:`, `chore:` |
-| Branch names | `feat/`, `fix/`, `docs/`, `chore/` | `feat/add-open-browser` |
+| Branch names | `feat/`, `fix/`, `docs/`, `chore/`, `work/` | `feat/add-open-browser` |
 
 ## Code Style
 
-- **Linter/Formatter:** ruff (line length 100). CI enforces this.
-- **Type checker:** mypy strict mode.
+- **Formatter:** `gofmt`. CI enforces this (`make lint`).
+- **Linter:** `go vet`.
 - **Comments:** Write *why*, not *what*. Do not comment self-evident code.
-- **Imports:** Each module starts with `from __future__ import annotations`.
-- **No debug prints:** Remove all `print()` statements before committing.
+- **No debug prints:** Remove all stray `fmt.Print*` statements before committing;
+  the only writer to stdout is `scriptfilter.Response.Write`.
+- **No third-party dependencies** unless clearly justified — keep `go.mod` dependency-free.
+
+## Releasing
+
+```bash
+# 1. Update version in workflow/info.plist
+# 2. Update CHANGELOG.md
+git add workflow/info.plist CHANGELOG.md
+git commit -m "chore: release v1.2.3"
+
+# 3. Tag and push
+git tag v1.2.3
+git push origin main --tags
+# GitHub Actions builds .alfredworkflow and creates a GitHub Release
+```
 
 ## Commit Guidelines
 
@@ -109,29 +136,27 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/):
 
 ```
 feat: add clipboard copy action
-fix: cache miss on special characters in query
-chore: update ruff to 0.5.0
+fix: substring filter matches on stale query
+chore: update Go toolchain to 1.28
 docs: update README usage section
-refactor: simplify router dispatch logic
+refactor: simplify examplecmd dispatch logic
 ```
 
 ## Pull Request Checklist
 
 - [ ] `make lint` passes
-- [ ] `make typecheck` passes
 - [ ] `make test` passes
-- [ ] `make build` succeeds
+- [ ] `make build-workflow` succeeds
 - [ ] New commands have tests
-- [ ] `README.md` updated if user-facing changes
+- [ ] `README.md`/`README-jp.md` updated if user-facing changes
 - [ ] `CHANGELOG.md` entry added under `[Unreleased]`
 
 ## Code Review Guidelines
 
 **Reviewers check for:**
-- Architectural constraints respected (no business logic in `entry.py`, no layer skipping)
-- All public functions have type hints
+- Architectural constraints respected (no business logic in `cmd/example-alfred`, no layer skipping)
 - No hardcoded absolute paths (use `$HOME` / env vars)
-- No debug `print()` statements in production code
+- No debug prints in production code
 - No Unicode emoji in Alfred result item `title` / `subtitle`
 - Tests cover the new or changed behavior
 - Alfred env variables managed via Config Builder, not `variables` key

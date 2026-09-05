@@ -7,17 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **Rewrite in Go**, matching the `cmd/`+`internal/` architecture every
+  workflow generated from this template has already independently converged
+  on (`alfred-quick-txt-save`, `alfred-markdown-ref`,
+  `alfred-note-md-template`, and others). Removed `search`/`open`/
+  `config`/`help` and the `ExampleService`/`ApiClient`/persistent config
+  store/TTL cache/file logger they depended on — none of those were kept
+  past the template defaults in any real migration; two were explicitly
+  removed after being ported (`alfred-paste-formatted-date`'s config store:
+  "nothing ever wrote to the config store"). The new single example command
+  (`cmd/example-alfred` + `internal/example` + `internal/examplecmd` +
+  `internal/scriptfilter`) lists static name→URL shortcuts, filtered by
+  query, opened via the workflow's existing native Open URL node — the same
+  minimal shape as the old `open_cmd.py`, with nothing else. Single
+  universal (amd64+arm64) binary via `lipo`; no vendored dependencies, no
+  runtime interpreter selection (`use_uv` is gone).
+- `docs/configuration-builder.md` now covers only this project's own
+  Configuration Builder settings; the general mechanism reference moved
+  to `docs/alfred-workflow-notes/configuration-builder.md`
+
 ### Added
 
 - `docs/alfred-workflow-notes/` — canonical, subtree-pullable reference for
   cross-project Alfred workflow development knowledge (Configuration
   Builder mechanism, `info.plist` object schema)
-
-### Changed
-
-- `docs/configuration-builder.md` now covers only this project's own
-  Configuration Builder settings; the general mechanism reference moved
-  to `docs/alfred-workflow-notes/configuration-builder.md`
 
 ### Fixed
 

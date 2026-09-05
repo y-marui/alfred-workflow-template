@@ -2,118 +2,96 @@
 
 ## Overview
 
-This workflow uses a layered architecture to keep Alfred-specific code isolated
-from business logic, making it easy to test and extend.
+An Alfred Workflow (Go): `cmd/example-alfred` is the single universal
+(amd64+arm64) binary `workflow/info.plist` invokes. The "wf" Script Filter
+node runs it with the query as `$1`, and Alfred's existing native Open URL
+action node opens whichever shortcut's URL the user picks — the binary never
+opens URLs itself.
 
 ```
 Alfred
-  │  keyword + query
+  │  keyword "wf" + query
   ▼
-workflow/scripts/entry.py       ← Alfred boundary (UI layer)
+cmd/example-alfred/main.go     ← Alfred boundary; argv dispatch + recover() only
   │
   ▼
-src/alfred/safe_run.py          ← Exception safety wrapper
+internal/examplecmd.List()     ← builds the Script Filter response
   │
   ▼
-src/app/core.py                 ← Application orchestrator
+internal/example.Filter()      ← domain logic: substring-filter the shortcut list
   │
   ▼
-src/alfred/router.py            ← Command dispatcher
-  │
-  ├─ search  → src/app/commands/search.py
-  ├─ open    → src/app/commands/open_cmd.py
-  ├─ config  → src/app/commands/config_cmd.py
-  └─ help    → src/app/commands/help_cmd.py
-                │
-                ▼
-            src/app/services/   ← Business logic + caching
-                │
-                ▼
-            src/app/clients/    ← External API / IO
+internal/scriptfilter.Response ← Script Filter JSON types + writer
+
+Alfred (user presses Enter)
+  │  selected shortcut's URL, as {query}
+  ▼
+alfred.workflow.action.openurl (native, unchanged by this binary)
 ```
 
 ## Layers
 
-### UI Layer (`workflow/`)
+### `cmd/example-alfred/`
 
-- `scripts/entry.py`: The only file Alfred executes directly.
-  - Sets up `sys.path` (vendor + src)
-  - Calls `safe_run(main)`
-  - No business logic here
+The only binary Alfred executes. Dispatches argv to `internal/examplecmd`,
+recovers from any panic into a visible Script Filter error item, and writes
+the response — no business logic beyond that.
 
-### Alfred SDK (`src/alfred/`)
+### `internal/scriptfilter/`
 
-Thin helpers that abstract Alfred-specific behavior.
-These are **not** application logic — they wrap Alfred's environment.
+Script Filter JSON types (`Item`, `Response`, `Icon`, `Mod`) and the writer
+that encodes them to stdout. Alfred-independent; ported as-is from
+`alfred-note-table-converter`'s version. Keep this if you replace the rest
+of `internal/` with your own domain logic.
 
-| Module | Purpose |
-|---|---|
-| `response.py` | Build and emit Script Filter JSON |
-| `router.py` | Parse query → dispatch to command |
-| `safe_run.py` | Catch exceptions → show error item |
-| `cache.py` | TTL disk cache via `alfred_workflow_cache` |
-| `config.py` | Persistent config via `alfred_workflow_data` |
-| `logger.py` | File logger to `~/Library/Logs/Alfred/Workflow/` |
+### `internal/example/`
 
-### Application Layer (`src/app/`)
+Pure, Alfred-independent domain logic — the placeholder this template ships
+for you to replace. A static list of name→URL shortcuts and a
+case-insensitive substring filter. Unit tested without Alfred running, and
+never imports `internal/scriptfilter`.
 
-Pure Python business logic — no Alfred dependency.
-This layer can be tested without Alfred and run from the CLI.
+### `internal/examplecmd/`
 
-| Directory | Purpose |
-|---|---|
-| `commands/` | One module per Alfred command. Each has `handle(args: str) -> None` |
-| `services/` | Business logic coordinating between commands and clients |
-| `clients/` | Thin HTTP/IO wrappers for external APIs |
-| `core.py` | Wires router to commands — the dependency injection point |
-
-## Query Parsing
-
-Alfred sends the full query string to the script.
-The router splits it into `<command> <args>`:
-
-```
-"search foo bar"  →  command="search",  args="foo bar"
-"open repo"       →  command="open",    args="repo"
-"config"          →  command="config",  args=""
-"foo bar"         →  command="search",  args="foo bar" (default fallback)
-```
+Builds the `scriptfilter.Response` from `internal/example`'s filtered
+results — the only layer that imports both `internal/example` and
+`internal/scriptfilter`.
 
 ## Dependency Flow
 
 ```
-commands → services → clients → external APIs
-         ↘
-           alfred SDK (response, cache, config, logger)
+cmd/example-alfred → internal/examplecmd → internal/example
+                                          → internal/scriptfilter
 ```
 
-Commands depend on services, not clients directly.
-Services own caching logic.
-Clients are stateless HTTP wrappers.
+`internal/example` never imports `internal/scriptfilter` — it has no Alfred
+JSON concerns.
 
 ## Packaging
 
-At build time (`make build`):
+At build time (`make build-workflow` / `scripts/build-workflow.sh`):
 
 ```
-.build/               ← temporary build directory
-├── info.plist        ← version synced from pyproject.toml
+.build/                     ← temporary build directory
+├── info.plist              ← copied from workflow/
 ├── icon.png
-├── scripts/
-│   └── entry.py
-├── src/              ← copied from repo src/
-│   ├── alfred/
-│   └── app/
-└── vendor/           ← pip install -r vendor-requirements.txt -t vendor/
+└── example-alfred          ← universal (amd64+arm64) binary
 ```
 
-The entire `.build/` directory is zipped to `dist/<name>-<version>.alfredworkflow`.
+`cmd/example-alfred` is built for `darwin/amd64` and `darwin/arm64` and
+merged into a single universal binary with `lipo`, so the packaged workflow
+runs natively on both Intel and Apple Silicon Macs without needing a runtime
+interpreter or vendored dependencies. The entire `.build/` directory is
+zipped to `dist/<name>-<version>.alfredworkflow`.
 
 ## Alfred Configuration Builder (`userconfigurationconfig`)
 
 Alfred 5 の Configuration Builder は `info.plist` の `userconfigurationconfig` キーで定義する。
 利用可能な全型・各キーの詳細は [`docs/alfred-workflow-notes/configuration-builder.md`](alfred-workflow-notes/configuration-builder.md)、
 このプロジェクトの設定項目は [`docs/configuration-builder.md`](configuration-builder.md) を参照。
+このテンプレートの例示コマンドは現在 Config Builder 変数を使っていない
+（`userconfigurationconfig` は空配列） — 設定が必要な機能を追加する際は
+上記ドキュメントのパターンに従う。
 
 ### Passing Variables
 
@@ -121,18 +99,16 @@ Alfred はスクリプト実行時に各 `variable` を環境変数として渡�
 インストール直後は `prefs.plist` が存在しないため変数は未セットになる場合がある。
 スクリプト側で常にデフォルト値を持たせること。
 
-~~~python
-# Python
-value = os.environ.get("my_variable", "fallback")
-~~~
-
-~~~bash
-# Shell
-[ "${use_uv:-1}" = "1" ] && ...
+~~~go
+// Go
+value := os.Getenv("my_variable")
+if value == "" {
+    value = "fallback"
+}
 ~~~
 
 **注意:** `checkbox` 型の unchecked 値は `"0"` ではなく空文字 `""` になる。
-`[ "$var" = "1" ]` で判定し、`"0"` との比較は避けること。
+`value == "1"` で判定し、`"0"` との比較は避けること。
 
 ### Relationship Between `variables` / `prefs.plist` / `default`
 

@@ -14,7 +14,6 @@
 ## Requirements
 
 - Alfred 5（Script Filter には Powerpack が必要）
-- Python 3.11+
 
 ## Setup
 
@@ -25,34 +24,25 @@
 
 `*.alfredworkflow` をダブルクリックして Alfred にインストールします。
 
-またはソースからビルド:
+またはソースからビルド（Go が必要 — バージョンは `go.mod` を参照）:
 
 ```bash
 git clone https://github.com/{user}/{repo}
 cd {repo}
-make install
-make build
+make build-workflow
 # → dist/*.alfredworkflow
 ```
 
 ## Usage
 
-Alfred を開いて `{keyword}` に続けてスペースを入力します。
-
-### Search (default)
+Alfred を開いて `{keyword}` と入力します。
 
 ```
-{keyword} <query>
-{keyword} search <query>
+{keyword}          -> 全てのサンプルショートカットを一覧表示
+{keyword} <query>  -> 名前でショートカットを絞り込み
 ```
 
-### Help
-
-```
-{keyword} help
-```
-
-利用可能なコマンド一覧を表示します。
+Enter で選択したショートカットの URL を開きます。
 
 ## License
 

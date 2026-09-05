@@ -15,26 +15,26 @@
 | Team size | Individual to small team (1–3 people) |
 | Language | English (OSS) |
 | License | MIT |
-| Runtime | Python 3.9+, Alfred 5 |
+| Runtime | Go (see `go.mod`), Alfred 5 |
 | AI tools | Claude Code / GitHub Copilot / Gemini CLI |
 
-> Production-ready template for building Alfred 5 Script Filter workflows.
+> Production-ready template for building Alfred 5 Script Filter workflows in Go.
 > Start shipping in 10 minutes.
 
 ## Features
 
-- ✅ **Layered architecture** — Alfred boundary isolated from business logic
-- ✅ **Lightweight Alfred SDK** — response builder, router, cache, config, logger
-- ✅ **Command-based UX** — `wf search`, `wf open`, `wf config`, `wf help`
-- ✅ **Full test suite** — pytest, no Alfred required to run tests
+- ✅ **Layered architecture** — Alfred boundary (`cmd/`) isolated from domain logic (`internal/`)
+- ✅ **Reusable Script Filter JSON layer** — `internal/scriptfilter`, Alfred-independent
+- ✅ **Single universal binary** — `darwin/amd64` + `darwin/arm64` merged via `lipo`, no runtime interpreter
+- ✅ **Full test suite** — `go test`, no Alfred required to run tests
 - ✅ **CI/CD** — lint, test, build, and release via GitHub Actions
-- ✅ **Vendor packaging** — third-party deps bundled in `vendor/`
+- ✅ **Zero dependencies** — `go.mod` has no `require` block
 - ✅ **AI-ready** — `AI_CONTEXT.md` + `CLAUDE.md` for AI assistant context
 
 ## Requirements
 
 - Alfred 5 (Powerpack required for Script Filter)
-- Python 3.9+
+- Go (see `go.mod` for the toolchain version)
 - [pre-commit](https://pre-commit.com/) (for security hooks)
 
 ## Quick Start
@@ -56,95 +56,56 @@
 ### Development (this template)
 
 ```bash
-git clone https://github.com/yourname/alfred-workflow-template
+git clone https://github.com/y-marui/alfred-workflow-template
 cd alfred-workflow-template
 
-# Install dev dependencies
-make install
-
 # Simulate Alfred locally
-make run Q="search foo"
-make run Q="help"
+go run ./cmd/example-alfred
+go run ./cmd/example-alfred "doc"
 
 # Run tests
 make test
 
 # Build workflow package
-make build
-# → dist/workflow-template-0.1.0.alfredworkflow
+make build-workflow
+# → dist/workflow-template-1.0.0.alfredworkflow
 ```
 
 Double-click `dist/*.alfredworkflow` to install in Alfred.
 
 ## Usage
 
-Open Alfred and type `wf` followed by a space.
-
-### Search (default)
+Open Alfred and type `wf`.
 
 ```
-wf <query>
-wf search <query>
+wf          -> list example shortcuts (repo, docs, issues)
+wf <query>  -> filter shortcuts by name
 ```
 
-Type any query to search. Press Enter to open the result.
+Press Enter to open the selected shortcut's URL.
 
 | Key | Action |
 |---|---|
-| ↩ Enter | Open result |
-| ⌘C | Copy result URL |
-
-### Open
-
-```
-wf open <name>
-```
-
-Open a named shortcut. Available shortcuts: `repo`, `docs`, `issues`
-
-### Config
-
-```
-wf config
-wf config reset
-```
-
-View current settings or reset all configuration.
-
-### Help
-
-```
-wf help
-```
-
-Show all available commands.
-
-### Tips
-
-- The workflow remembers your most-used results (Alfred learns from usage).
-- Results are cached for 5 minutes to minimize API calls.
-- Use `⌘,` in Alfred to access Workflow Preferences.
+| ↩ Enter | Open the shortcut's URL |
 
 ### Troubleshooting
 
 **No results appear**
 - Check Alfred's debugger: open Alfred → `⌘D`
-- Check logs: `~/Library/Logs/Alfred/Workflow/<bundle-id>.log`
-
-**Results are stale**
-- The cache TTL is 5 minutes. Wait for it to expire, or clear manually: `wf config reset`
 
 ## Project Structure
 
 ```
 alfred-workflow-template/
-├── src/
-│   ├── alfred/         # Alfred SDK (response, router, cache, config, logger, safe_run)
-│   └── app/            # Application layer (commands, services, clients)
-├── workflow/           # Alfred package (info.plist, scripts/entry.py, vendor/)
-├── tests/              # pytest test suite
-├── scripts/            # build.sh, dev.sh, release.sh, vendor.sh
-└── docs/               # Architecture and reference documentation
+├── cmd/
+│   └── example-alfred/     # The binary Alfred invokes (argv dispatch only)
+├── internal/
+│   ├── example/            # Domain logic — replace with your own
+│   ├── examplecmd/         # Builds the Script Filter response
+│   └── scriptfilter/       # Script Filter JSON types (Alfred-independent, reusable)
+├── workflow/                # Alfred package (info.plist, icon.png)
+├── scripts/                 # build-workflow.sh, extract-changelog.sh
+└── docs/                    # Architecture and reference documentation
 ```
 
 ## Documentation
@@ -178,15 +139,20 @@ After running the initial setup (see Quick Start above), customize the workflow:
    - Replace `bundleid` with your bundle ID (`com.yourname.workflowname`)
    - Replace the `keyword` (`wf`) with your trigger keyword
    - Run `uuidgen` and replace the placeholder UIDs
-2. Replace `src/app/clients/api_client.py` with your API
-3. Update the workflow name in `pyproject.toml`
-4. Update shortcuts in `src/app/commands/open_cmd.py`
+2. Rename `cmd/example-alfred` to `cmd/<your-workflow-name>-alfred`
+3. Replace `internal/example` + `internal/examplecmd` with your own domain logic
+   (keep `internal/scriptfilter` as-is)
+4. Update the module path in `go.mod`
 5. Add your `workflow/icon.png`
+
+Before writing any Go code to talk to macOS (clipboard, keystrokes, notifications),
+check [docs/alfred-workflow-notes/workflow-object-schema.md](docs/alfred-workflow-notes/workflow-object-schema.md) —
+an Alfred-native object may already cover it without any code at all.
 
 ## Release
 
 ```bash
-# 1. Bump version in pyproject.toml
+# 1. Bump version in workflow/info.plist
 # 2. Tag and push
 git tag v1.2.3
 git push --tags
