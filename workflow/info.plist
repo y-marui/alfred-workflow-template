@@ -4,6 +4,8 @@
 <dict>
 	<key>bundleid</key>
 	<string>com.example.alfred-workflow-template</string>
+	<key>category</key>
+	<string>Tools &amp; Utilities</string>
 	<key>connections</key>
 	<dict>
 		<key>36381EAF-63DA-4000-AED5-AF6DAF671396</key>

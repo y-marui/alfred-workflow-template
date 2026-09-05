@@ -21,6 +21,7 @@ demo Workflow) and update the Status/Notes columns as the project matures.
 | No self-installed external software | ✅ Done | `go.mod` carries no third-party dependencies; nothing is fetched at runtime |
 | Icon ≥ 256×256 px, square | ⏳ Verify | Replace `workflow/icon.png` with a real icon for your project; confirm size/squareness with `sips -g pixelWidth -g pixelHeight` |
 | Keyword ≥ 3 characters | ⏳ Verify | Confirm your chosen keyword (replacing the template's `tpl`) is 3+ characters and doesn't collide with common workflows |
+| Category set | ⏳ Verify | Replace the placeholder `Tools & Utilities` in `workflow/info.plist`'s `category` key with the value that actually fits your workflow — see the valid values in [`docs/alfred-workflow-notes/workflow-object-schema.md`](docs/alfred-workflow-notes/workflow-object-schema.md#category) |
 | User Configuration over environment variables | ⏳ Verify | Add to Alfred's Configuration Builder (`workflow/info.plist`'s `userconfigurationconfig`) if your project needs user-facing settings; N/A otherwise |
 | English instructions in About/README | ⏳ Verify | Confirm `README.md` (the reference/English version per `LANGUAGE_POLICY.md`) is complete once renamed from `README_TEMPLATE.md` |
 | README follows Gallery style guide | ⏳ Verify | `## Usage` should open with 1-2 sentences ending "via the `<keyword>` keyword" (or "via the Universal Action"), followed by one screenshot per entry point; modifier keys as a `* <kbd>...</kbd> action` bullet list, not a table |

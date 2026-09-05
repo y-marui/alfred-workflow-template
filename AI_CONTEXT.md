@@ -254,20 +254,14 @@ Alfred ワークフローは現時点では UI テキストのローカライゼ
 
 #### category Options
 
-Alfred が受け付ける category 文字列:
-
-- `Tools & Utilities`
-- `Internet`
-- `Files & Folders`
-- `Productivity`
-- `Communication`
-- `Music & Audio`
-- `System`
-- `Games`
-- `Academic`
-- `Development`
+有効な値の一覧は
+[`docs/alfred-workflow-notes/workflow-object-schema.md`](docs/alfred-workflow-notes/workflow-object-schema.md)
+の `category` セクションを参照する（他の Alfred ワークフロープロジェクトとも
+共有する技術リファレンスのため、二重管理しない）。
 
 ユーザーにワークフローの用途を聞き、最も適切な category を提案して確認を取る。
+Alfred Gallery 提出基準（`topics/alfred/ALFRED_GALLERY.md`）でも必須項目 —
+`category` を設定していないプロジェクトを見つけたら移行漏れとして扱う。
 
 #### Update Steps
 

@@ -42,9 +42,28 @@ Every workflow's `info.plist` is a dict with (at minimum):
 - `objects` — an array of objects, each `{config: {...}, type: "alfred.workflow.…", uid: "<UUID>", version: <int>}`. Order in the array is cosmetic only; Alfred re-sorts it on every save. Never rely on array position — always match by `uid`.
 - `connections` — a dict keyed by a source object's `uid`, each value an array of `{destinationuid, modifiers, modifiersubtext, vitoclose}` (one entry per outgoing wire, `modifiers` distinguishing plain vs. modifier-key connections).
 - `uidata` — a dict keyed by `uid`, each value `{xpos, ypos}`: purely the canvas layout, never functional.
-- `bundleid`, `name`, `description`, `createdby`, `webaddress`, `readme`, `version`, `disabled`, `userconfigurationconfig`, `variablesdontexport` — workflow-level metadata, not object-level.
+- `bundleid`, `name`, `description`, `category`, `createdby`, `webaddress`, `readme`, `version`, `disabled`, `userconfigurationconfig`, `variablesdontexport` — workflow-level metadata, not object-level.
 
 A `uid` is a stable identifier for that object for as long as the workflow exists — reconnecting objects doesn't change it, but deleting and re-adding one does. When hand-authoring a plist, invent your own UUIDs; Alfred accepts any well-formed UUID string.
+
+## `category`
+
+A single string, one of the values Alfred Preferences → Workflows' own
+"Category" dropdown offers (confirmed against a real export — see "How
+this reference was generated" above):
+
+`Tools & Utilities`, `Internet`, `Files & Folders`, `Productivity`,
+`Communication`, `Music & Audio`, `System`, `Games`, `Academic`,
+`Development`
+
+The key is entirely absent from a freshly-exported blank workflow's
+`info.plist` until the Category dropdown is touched at least once (same
+absent-until-touched behavior as `keyword` on Script Filter, noted above)
+— when hand-authoring or scripting this key (e.g. via `PlistBuddy -c "Add
+:category string <value>"` when absent, `Set` when present), pick a value
+from this exact list rather than inventing a new category string, since
+Alfred does not validate it against the list and a mismatched value simply
+never surfaces the workflow under any category filter.
 
 ## Connection graph gotchas
 
