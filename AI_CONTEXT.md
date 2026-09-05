@@ -30,15 +30,16 @@ Alfred ワークフロー開発の汎用知識（Configuration Builder の仕組
 ## Project Overview
 
 Alfred 5 Script Filter ワークフロー用の OSS テンプレート。
-Python 3.11+、レイヤードアーキテクチャ、CI/CD 完備。
+Go（`go.mod`参照）、`cmd/`+`internal/` レイヤードアーキテクチャ、CI/CD 完備。
 対象: 個人〜3人規模の開発チーム。ライセンス: MIT。
 
 ```
-src/alfred/     ← Alfred SDK（response / router / cache / config / logger / safe_run）
-src/app/        ← アプリケーション層（commands / services / clients）
-workflow/       ← Alfred パッケージ（info.plist / scripts/entry.py / vendor/）
-tests/          ← pytest テストスイート
-scripts/        ← build.sh / dev.sh / release.sh / vendor.sh
+cmd/example-alfred/     ← Alfred が実行する唯一のバイナリ（argv ディスパッチのみ）
+internal/example/       ← ドメインロジック（Alfred 非依存、置き換え対象）
+internal/examplecmd/    ← internal/example から Script Filter レスポンスを組み立てる
+internal/scriptfilter/  ← Script Filter JSON 型（Alfred 非依存、そのまま再利用可）
+workflow/               ← Alfred パッケージ（info.plist / icon.png のみ）
+scripts/                ← build-workflow.sh / extract-changelog.sh
 ```
 
 詳細アーキテクチャ: `docs/architecture.md`
@@ -58,7 +59,7 @@ scripts/        ← build.sh / dev.sh / release.sh / vendor.sh
 
 #### Basic Philosophy
 - **ローカルファースト** — Alfred ワークフローはオフラインで動作することを前提にする
-- **インフラ最小化** — サーバーレス、外部依存なし（vendor/ に完結）
+- **インフラ最小化** — サーバーレス、外部依存なし（`go.mod` に `require` ブロックを持たない）
 - **小さく始める** — 機能追加は必要性が確認されてから
 
 ### Development Principles (PRINCIPLES)
@@ -269,75 +270,79 @@ Alfred が受け付ける category 文字列:
 
 ### Architecture Constraints
 
-- `workflow/scripts/entry.py` は Alfred が実行する**唯一のファイル**。ビジネスロジックを書かない
-- `src/alfred/` は Alfred SDK ヘルパーのみ — アプリケーションロジックは不可
-- Commands → Services → Clients の順に呼ぶ。レイヤーをスキップしない
-- すべての `output()` 呼び出しは `alfred.response.output()` を経由する
-- `main()` は必ず `safe_run()` でラップする（未捕捉例外 = Alfred が空白表示になる）
+- `cmd/example-alfred/main.go` は Alfred が実行する**唯一のバイナリ**。ビジネスロジックを書かない
+- `internal/examplecmd/` はディスパッチ・レスポンス生成のみ — ドメインロジックは `internal/example/` に置く
+- `internal/example/` は Alfred 非依存の純粋ロジック — stdlib のみ使用し、単体でテスト可能に保つ
+- すべての応答は `internal/scriptfilter.Response.Write()` を経由する
+- `main()` はディスパッチを `recover()` でラップする（未捕捉の panic = Alfred が空白表示になる）
+
+### Native vs. Go
+
+Alfred ネイティブのオブジェクト（Copy to Clipboard、Post Notification、Arguments and
+Variables、Conditional 等）で完全に代替できる処理は Go 側に書かない。判断の詳細・各
+オブジェクトの確認済み／未検証の制約は `docs/alfred-workflow-notes/workflow-object-schema.md`
+の「Native vs. Go」系の記述、および dev-charter の `topics/ALFRED_DEV_ENV.md` を参照する
+（両方ともこのテンプレートのGo移行時に追記したもの — 内容を重複して書かない）。
 
 ### Testing Conventions
 
-- `src/app/`（commands / services / clients）をテスト対象とする — 純粋 Python
-- `ApiClient` 内の外部 API 呼び出しはモックする。テストで実際の HTTP 通信をしない
-- `conftest.py` が Alfred 環境変数を tmp ディレクトリに自動設定する
-- Alfred SDK ヘルパーのテストは `tests/test_alfred.py`
+- `internal/`（`example` / `examplecmd`）と `internal/scriptfilter` をテスト対象とする（`go test ./...`）
+- `cmd/example-alfred` は `exec.Command("go", "build", ...)` でビルドしてから実行する薄い統合テストを持つ
+- 実際の HTTP 通信はテストで行わない（このテンプレート自体もネットワーク呼び出しを行わない）
+- クリップボード・キーストロークなど OS 境界に依存する処理を追加する場合は、モックでは
+  なく小さいインターフェース越しにフェイクへ差し替えてテストする
 
 詳細な開発フロー・命名規則・コードレビュー手順は `DEVELOPING.md` を参照する。
 
-### Python Development Environment (PYTHON_TOOLCHAIN)
+### Go Development Environment (GO_TOOLCHAIN)
 
 | 役割 | ツール |
 |---|---|
-| Python バージョン管理 | pyenv |
-| パッケージ管理・仮想環境・スクリプト実行 | uv |
-| Linter / Formatter | ruff |
-| 型チェック | mypy（strict モード） |
-| テスト | pytest |
+| Go バージョン管理 | `go.mod` の `go` ディレクティブに従う |
+| Linter / Formatter | `gofmt` + `go vet` |
+| テスト | `go test` |
+| 依存管理 | 標準の `go.mod`（サードパーティ依存は原則追加しない） |
 
-新しい Python プロジェクトを立ち上げる場合、または依存関係を変更する場合はこのツールチェーンに従う。
+新しい Go コードを追加する場合、または依存関係を変更する場合はこのツールチェーンに従う。
+詳細は dev-charter の `topics/ALFRED_DEV_ENV.md` を参照する。
 
 ### Alfred Runtime (RUNTIME)
 
-Alfred からスクリプトを実行する際は `use_uv` 変数で実行方法を切り替える。
+Alfred は Script Filter / Run Script ノードからユニバーサル（amd64+arm64）バイナリを
+直接実行する。インタプリタ選択や実行時ラッパースクリプトは不要。
 
-- `use_uv` は Config Builder の checkbox（デフォルト: ON）として定義する
-- **ON かつ `uv` が PATH に存在する場合**: `uv run python` で実行
-- **OFF または `uv` が存在しない場合**: `python3` で実行
-
-`workflow/scripts/entry.py` を呼ぶスクリプト行のパターン:
+`workflow/info.plist` の Script Filter ノードの `script` キー:
 
 ```bash
-[ "${use_uv:-1}" = "1" ] && command -v uv >/dev/null 2>&1 && exec uv run python scripts/entry.py "$1" || exec python3 scripts/entry.py "$1"
+./example-alfred "$1"
 ```
+
+`darwin/amd64` と `darwin/arm64` それぞれでビルドし、`lipo` で1つのユニバーサルバイナリに
+マージする（`scripts/build-workflow.sh`）。
 
 ### Configuration Management (CONFIG_BUILDER)
 
 - **ユーザーが設定する値はすべて Config Builder に入れる** — `workflow/info.plist` の `userconfigurationconfig` 配列に追加する
 - Alfred の `variables` キー（environment variable）は使わない。Config Builder で代替できる場合は必ず Config Builder を使う
-- Config Builder の値は Alfred がスクリプト実行時に環境変数として自動で渡すため、スクリプト側では `os.environ` で読める
+- Config Builder の値は Alfred がスクリプト実行時に環境変数として自動で渡すため、スクリプト側では `os.Getenv()` で読める
 - 新しい設定項目を追加するときは以下の型から選ぶ: `textfield` / `checkbox` / `select` / `file` / `password`
 
 ### Code Style
 
 - コメントは **「なぜそうするか」のみ** 書く。コードから自明な処理には書かない
-- ruff（linter）+ ruff format（formatter）、行長 100
-- すべての public 関数に型ヒント必須
-- 各モジュール先頭に `from __future__ import annotations`
-- mypy strict モード（`pyproject.toml` 参照）
+- `gofmt` + `go vet`。CI で強制する
+- すべての exported 関数・型に doc コメントを検討する（自明でないもののみ）
 
-命名規則・コミットメッセージ形式・PR チェックリストは `CONTRIBUTING.md` を参照する。
+命名規則・コミットメッセージ形式・PR チェックリストは `DEVELOPING.md` を参照する。
 
 ### Performance
 
-- Script Filter のレスポンスタイム目標: **100ms 未満**
-- ネットワーク呼び出しには `alfred.cache.Cache` を使用する
-- キャッシュ TTL デフォルト: 300s（5分）
+- Script Filter のレスポンスタイム目標: **100ms 未満**（コンパイル済みバイナリのため通常余裕がある）
 
 ### Dependency Management
 
-- ランタイム依存 → `vendor-requirements.txt` → `workflow/vendor/` にベンダリング（`make vendor`）
-- 開発依存 → `pyproject.toml [dependency-groups]`（uv 推奨形式）
-- ランタイム依存は最小限に保つ（パッケージ追加 = ワークフローサイズ増加）
+- サードパーティ依存の追加は原則禁止（`go.mod` は依存なしを維持）
+- ランタイム依存は最小限に保つ（パッケージ追加 = ワークフローサイズ・起動時間の増加）
 
 ---
 
@@ -353,10 +358,10 @@ Alfred からスクリプトを実行する際は `use_uv` 変数で実行方法
 
 - シークレット・認証情報・`.env` ファイルのコミット
 - pre-commit フックのスキップ（`--no-verify` 禁止）
-- `workflow/scripts/entry.py` へのビジネスロジックの追加
-- レイヤーをスキップした呼び出し（例: Command が Client を直接呼ぶ）
+- `cmd/example-alfred/main.go` へのビジネスロジックの追加
+- レイヤーをスキップした呼び出し（例: `main.go` が `internal/example` を直接呼ぶ）
 - テストでの実際の HTTP 通信
-- デバッグ用 `print` 文の本番コードへの残置
+- デバッグ用 `fmt.Print*` 文の本番コードへの残置
 - Alfred 結果アイテムへの Unicode 絵文字の使用
 - ハードコードされた絶対パス（`$HOME` を使う）
 - Config Builder で代替できる設定を Alfred の `variables` キー（environment variable）に直接書くこと

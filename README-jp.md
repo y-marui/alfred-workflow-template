@@ -15,26 +15,26 @@
 | 開発環境 | 個人〜小規模チーム（1〜3人） |
 | 主言語 | 英語（OSS） |
 | ライセンス | MIT |
-| 動作環境 | Python 3.9+, Alfred 5 |
+| 動作環境 | Go（`go.mod` 参照）, Alfred 5 |
 | AI ツール | Claude Code / GitHub Copilot / Gemini CLI |
 
-> Alfred 5 Script Filter ワークフローのプロダクションレディなテンプレート。
+> Alfred 5 Script Filter ワークフローのプロダクションレディな Go テンプレート。
 > 10分で開発を開始できます。
 
 ## Features
 
-- ✅ **レイヤードアーキテクチャ** — Alfred 境界とビジネスロジックを分離
-- ✅ **軽量 Alfred SDK** — レスポンスビルダー、ルーター、キャッシュ、設定、ロガー
-- ✅ **コマンドベース UX** — `wf search`、`wf open`、`wf config`、`wf help`
-- ✅ **フルテストスイート** — pytest で Alfred なしにテスト実行可能
+- ✅ **レイヤードアーキテクチャ** — Alfred 境界（`cmd/`）とドメインロジック（`internal/`）を分離
+- ✅ **再利用可能な Script Filter JSON レイヤー** — `internal/scriptfilter`（Alfred 非依存）
+- ✅ **単一ユニバーサルバイナリ** — `darwin/amd64` + `darwin/arm64` を `lipo` でマージ、ランタイムインタプリタ不要
+- ✅ **フルテストスイート** — `go test` で Alfred なしにテスト実行可能
 - ✅ **CI/CD** — GitHub Actions でリント・テスト・ビルド・リリースを自動化
-- ✅ **ベンダーパッケージング** — サードパーティ依存を `vendor/` にバンドル
+- ✅ **依存ゼロ** — `go.mod` に `require` ブロックなし
 - ✅ **AI 対応** — `AI_CONTEXT.md` + `CLAUDE.md` で AI アシスタントのコンテキストを管理
 
 ## Requirements
 
 - Alfred 5（Script Filter には Powerpack が必要）
-- Python 3.9+
+- Go（バージョンは `go.mod` を参照）
 - [pre-commit](https://pre-commit.com/)（セキュリティフック用）
 
 ## Quick Start
@@ -56,95 +56,56 @@
 ### Development (this template)
 
 ```bash
-git clone https://github.com/yourname/alfred-workflow-template
+git clone https://github.com/y-marui/alfred-workflow-template
 cd alfred-workflow-template
 
-# 開発用依存関係をインストール
-make install
-
 # Alfred をローカルでシミュレート
-make run Q="search foo"
-make run Q="help"
+go run ./cmd/example-alfred
+go run ./cmd/example-alfred "doc"
 
 # テストを実行
 make test
 
 # ワークフローパッケージをビルド
-make build
-# → dist/workflow-template-0.1.0.alfredworkflow
+make build-workflow
+# → dist/workflow-template-1.0.0.alfredworkflow
 ```
 
 `dist/*.alfredworkflow` をダブルクリックして Alfred にインストールします。
 
 ## Usage
 
-Alfred を開いて `wf` に続けてスペースを入力します。
-
-### Search (default)
+Alfred を開いて `wf` と入力します。
 
 ```
-wf <query>
-wf search <query>
+wf          -> サンプルショートカット一覧（repo, docs, issues）
+wf <query>  -> 名前でショートカットを絞り込み
 ```
 
-クエリを入力して検索します。Enter を押すと結果を開きます。
+Enter を押すと選択したショートカットの URL を開きます。
 
 | キー | 操作 |
 |---|---|
-| ↩ Enter | 結果を開く |
-| ⌘C | 結果の URL をコピー |
-
-### Open
-
-```
-wf open <name>
-```
-
-ショートカットを開きます。利用可能なショートカット: `repo`、`docs`、`issues`
-
-### Config
-
-```
-wf config
-wf config reset
-```
-
-現在の設定を確認、またはすべての設定をリセットします。
-
-### Help
-
-```
-wf help
-```
-
-利用可能なコマンド一覧を表示します。
-
-### Tips
-
-- ワークフローは最もよく使った結果を記憶します（Alfred の学習機能）。
-- API 呼び出しを最小化するため、結果は 5 分間キャッシュされます。
-- `⌘,` で Alfred のワークフロー設定にアクセスできます。
+| ↩ Enter | ショートカットの URL を開く |
 
 ### Troubleshooting
 
 **結果が表示されない場合**
 - Alfred のデバッガーを確認: Alfred を開いて `⌘D`
-- ログを確認: `~/Library/Logs/Alfred/Workflow/<bundle-id>.log`
-
-**結果が古い場合**
-- キャッシュ TTL は 5 分です。期限切れを待つか、手動でクリア: `wf config reset`
 
 ## Project Structure
 
 ```
 alfred-workflow-template/
-├── src/
-│   ├── alfred/         # Alfred SDK (response, router, cache, config, logger, safe_run)
-│   └── app/            # アプリケーション層 (commands, services, clients)
-├── workflow/           # Alfred パッケージ (info.plist, scripts/entry.py, vendor/)
-├── tests/              # pytest テストスイート
-├── scripts/            # build.sh, dev.sh, release.sh, vendor.sh
-└── docs/               # アーキテクチャ・リファレンスドキュメント
+├── cmd/
+│   └── example-alfred/     # Alfred が実行するバイナリ（argv ディスパッチのみ）
+├── internal/
+│   ├── example/            # ドメインロジック — 自分のものに置き換える
+│   ├── examplecmd/         # Script Filter レスポンスを組み立てる
+│   └── scriptfilter/       # Script Filter JSON 型（Alfred 非依存、そのまま再利用可）
+├── workflow/                 # Alfred パッケージ (info.plist, icon.png)
+├── scripts/                  # build-workflow.sh, extract-changelog.sh
+└── docs/                     # アーキテクチャ・リファレンスドキュメント
 ```
 
 ## Documentation
@@ -178,15 +139,20 @@ alfred-workflow-template/
    - `bundleid` を自分のバンドル ID に変更（例: `com.yourname.workflowname`）
    - キーワード（`wf`）を自分のトリガーキーワードに変更
    - `uuidgen` で生成した UUID に置き換え
-2. `src/app/clients/api_client.py` を実際の API クライアントに置き換え
-3. `pyproject.toml` のワークフロー名を更新
-4. `src/app/commands/open_cmd.py` のショートカットを更新
+2. `cmd/example-alfred` を `cmd/<workflow名>-alfred` にリネーム
+3. `internal/example` + `internal/examplecmd` を自分のドメインロジックに置き換え
+   （`internal/scriptfilter` はそのまま使う）
+4. `go.mod` のモジュールパスを更新
 5. `workflow/icon.png` を追加
+
+クリップボード・キーストローク・通知など macOS 固有の操作をGoで書く前に、
+[docs/alfred-workflow-notes/workflow-object-schema.md](docs/alfred-workflow-notes/workflow-object-schema.md)
+を確認する — Alfred ネイティブのオブジェクトで、コード無しに実現できることがある。
 
 ## Release
 
 ```bash
-# 1. pyproject.toml のバージョンを更新
+# 1. workflow/info.plist のバージョンを更新
 # 2. タグを付けてプッシュ
 git tag v1.2.3
 git push --tags

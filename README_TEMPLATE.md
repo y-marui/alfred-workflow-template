@@ -14,7 +14,6 @@
 ## Requirements
 
 - Alfred 5 (Powerpack required for Script Filter)
-- Python 3.11+
 
 ## Setup
 
@@ -25,34 +24,25 @@
 
 Double-click `*.alfredworkflow` to install in Alfred.
 
-Or build from source:
+Or build from source (requires Go — see `go.mod` for the version):
 
 ```bash
 git clone https://github.com/{user}/{repo}
 cd {repo}
-make install
-make build
+make build-workflow
 # → dist/*.alfredworkflow
 ```
 
 ## Usage
 
-Open Alfred and type `{keyword}` followed by a space.
-
-### Search (default)
+Open Alfred and type `{keyword}`.
 
 ```
-{keyword} <query>
-{keyword} search <query>
+{keyword}          -> list all example shortcuts
+{keyword} <query>  -> filter shortcuts by name
 ```
 
-### Help
-
-```
-{keyword} help
-```
-
-Show all available commands.
+Press Enter to open the selected shortcut's URL.
 
 ## License
 

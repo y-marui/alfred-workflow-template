@@ -34,9 +34,9 @@ Alfred result items are JSON objects with the following fields used in this work
 
 ### Empty / Error States
 
-- Empty query → show a placeholder item with `valid: false` to guide the user.
-- No results → show an informative item (e.g., `No results for "foo"`) with `valid: false`.
-- Error → `safe_run` automatically shows an error item; do not hide errors silently.
+- No matches → show an informative item (e.g., `No matching shortcut`) with `valid: false`.
+- Error → `main.go`'s `recover()`-wrapped `dispatch` automatically shows an
+  error item; do not hide errors silently.
 
 ## Icon
 
@@ -58,43 +58,21 @@ These are standard Alfred behaviors — do not override them in the workflow:
 
 ## Layout Conventions by Command
 
-### `search` results
-
-```
-title:    <result title>
-subtitle: <result subtitle or URL>
-arg:      <URL or identifier>
-uid:      <unique result ID>
-valid:    true
-```
-
-### `open` shortcut list
+### `example` shortcut list
 
 ```
 title:    <shortcut name>
 subtitle: <URL>
 arg:      <URL>
-uid:      open-<name>
+uid:      example-<name>
 valid:    true
-autocomplete: open <name>
+autocomplete: <name>
 ```
 
-### `config` items
+### No-match row
 
 ```
-title:    <key>: <value>      (for existing settings)
-          Reset all settings  (action item)
-subtitle: Current setting     (for existing settings)
-          wf config reset ... (for action item)
-valid:    false (settings display)
-          true  (reset action)
-```
-
-### `help` items
-
-```
-title:    wf <command> <args>
-subtitle: <command description>
+title:    No matching shortcut
+subtitle: Try a different query
 valid:    false
-autocomplete: <command trigger string>
 ```

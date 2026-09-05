@@ -6,14 +6,15 @@ config keys, how variables reach scripts), see the cross-project reference:
 
 This file covers only what's specific to this project.
 
-Variable names in this project use **lowercase with underscores** (e.g. `use_uv`, `log_level`).
+Variable names in this project use **lowercase with underscores**.
 
 ## This project's configuration
 
-| Variable | Type | Default | Description |
-|---|---|---|---|
-| `use_uv` | checkbox | `true` | Use `uv run` when uv is installed |
-| `log_level` | select | `WARNING` | Log verbosity (`DEBUG` / `INFO` / `WARNING` / `ERROR`) |
-| `cache_ttl` | textfield | `300` | API cache lifetime in seconds |
-| `api_base_url` | textfield | `https://api.example.com/v1` | API endpoint base URL |
-| `api_timeout` | textfield | `5` | HTTP request timeout in seconds |
+None currently — `workflow/info.plist`'s `userconfigurationconfig` is an
+empty array, since the example command (a static shortcut list) has nothing
+to configure.
+
+When you add a setting a future command needs, register it here in this
+same table (name, `select`/`checkbox`/`textfield`/`file`/`password` type,
+default, and what it does), following the general reference's widget
+patterns. Read it via `os.Getenv("your_variable_name")` in Go.
