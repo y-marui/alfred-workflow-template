@@ -283,8 +283,10 @@ Alfred Gallery 提出基準（`topics/alfred/ALFRED_GALLERY.md`）でも必須�
 Alfred ネイティブのオブジェクト（Copy to Clipboard、Post Notification、Arguments and
 Variables、Conditional 等）で完全に代替できる処理は Go 側に書かない。判断の詳細・各
 オブジェクトの確認済み／未検証の制約は `docs/alfred-workflow-notes/workflow-object-schema.md`
-の「Native vs. Go」系の記述、および dev-charter の `topics/ALFRED_DEV_ENV.md` を参照する
-（両方ともこのテンプレートのGo移行時に追記したもの — 内容を重複して書かない）。
+の「Native vs. Go」系の記述、および
+[`docs/dev-charter/topics/alfred/ALFRED_DEV_ENV.md`](docs/dev-charter/topics/alfred/ALFRED_DEV_ENV.md)
+の「Native vs. Go」節を参照する（両方ともこのテンプレートのGo移行時に追記したもの —
+内容を重複して書かない）。
 
 ### Testing Conventions
 
@@ -298,29 +300,25 @@ Variables、Conditional 等）で完全に代替できる処理は Go 側に書�
 
 ### Go Development Environment (GO_TOOLCHAIN)
 
-| 役割 | ツール |
-|---|---|
-| Go バージョン管理 | `go.mod` の `go` ディレクティブに従う |
-| Linter / Formatter | `gofmt` + `go vet` |
-| テスト | `go test` |
-| 依存管理 | 標準の `go.mod`（サードパーティ依存は原則追加しない） |
-
-新しい Go コードを追加する場合、または依存関係を変更する場合はこのツールチェーンに従う。
-詳細は dev-charter の `topics/ALFRED_DEV_ENV.md` を参照する。
+Go のバージョン管理方針・lint/format ツール選定・テスト方針・依存関係ポリシーは
+Alfred/Go ワークフロー共通の一般方針であり、二重管理しないため
+[`docs/dev-charter/topics/alfred/ALFRED_DEV_ENV.md`](docs/dev-charter/topics/alfred/ALFRED_DEV_ENV.md)
+の "Version Policy" / "Toolchain" / "Dependency Policy" を参照する。
+新しい Go コードを追加する場合、または依存関係を変更する場合はこれに従う。
 
 ### Alfred Runtime (RUNTIME)
 
-Alfred は Script Filter / Run Script ノードからユニバーサル（amd64+arm64）バイナリを
-直接実行する。インタプリタ選択や実行時ラッパースクリプトは不要。
+ユニバーサル（amd64+arm64）バイナリのビルド方針（インタプリタ不要、`lipo` でのマージ）は
+一般方針のため [`docs/dev-charter/topics/alfred/ALFRED_DEV_ENV.md`](docs/dev-charter/topics/alfred/ALFRED_DEV_ENV.md)
+の "Alfred Runtime" を参照する。
 
-`workflow/info.plist` の Script Filter ノードの `script` キー:
+`workflow/info.plist` の Script Filter ノードの `script` キー（このテンプレート固有のバイナリ名）:
 
 ```bash
 ./example-alfred "$1"
 ```
 
-`darwin/amd64` と `darwin/arm64` それぞれでビルドし、`lipo` で1つのユニバーサルバイナリに
-マージする（`scripts/build-workflow.sh`）。
+実際のビルド手順は `scripts/build-workflow.sh` を参照。
 
 ### Configuration Management (CONFIG_BUILDER)
 
@@ -341,10 +339,9 @@ Alfred は Script Filter / Run Script ノードからユニバーサル（amd64+
 
 - Script Filter のレスポンスタイム目標: **100ms 未満**（コンパイル済みバイナリのため通常余裕がある）
 
-### Dependency Management
-
-- サードパーティ依存の追加は原則禁止（`go.mod` は依存なしを維持）
-- ランタイム依存は最小限に保つ（パッケージ追加 = ワークフローサイズ・起動時間の増加）
+依存関係ポリシー（サードパーティ依存を追加しない方針）は上記「Go Development Environment
+(GO_TOOLCHAIN)」が参照する `ALFRED_DEV_ENV.md` の "Dependency Policy" を参照する
+（二重管理しない）。
 
 ---
 
