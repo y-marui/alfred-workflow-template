@@ -26,6 +26,11 @@ git push origin main --tags
 # Manual build (if needed)
 make build-workflow
 open dist/*.alfredworkflow
+
+# If Actions can't run (e.g. a billing/spending-limit issue), cut the
+# release from this machine instead — same build, same GitHub Release,
+# just triggered locally:
+make release
 ```
 
 ## Security
