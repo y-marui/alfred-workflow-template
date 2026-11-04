@@ -16,7 +16,7 @@
 | 主言語 | 英語（OSS） |
 | ライセンス | MIT |
 | 動作環境 | Go（`go.mod` 参照）, Alfred 5 |
-| AI ツール | Claude Code / GitHub Copilot / Gemini CLI |
+| AI ツール | Claude Code / GitHub Copilot |
 
 > Alfred 5 Script Filter ワークフローのプロダクションレディな Go テンプレート。
 > 10分で開発を開始できます。
@@ -123,7 +123,6 @@ alfred-workflow-template/
 |---|---|
 | Claude Code | アーキテクチャ設計・大規模変更・リファクタリング |
 | GitHub Copilot | バグ修正・細かな実装・単体テスト作成 |
-| Gemini CLI | ドキュメント管理 |
 
 セッションコンテキスト: [`AI_CONTEXT.md`](AI_CONTEXT.md)、[`CLAUDE.md`](CLAUDE.md)
 

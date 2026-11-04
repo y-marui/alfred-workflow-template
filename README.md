@@ -16,7 +16,7 @@
 | Language | English (OSS) |
 | License | MIT |
 | Runtime | Go (see `go.mod`), Alfred 5 |
-| AI tools | Claude Code / GitHub Copilot / Gemini CLI |
+| AI tools | Claude Code / GitHub Copilot |
 
 > Production-ready template for building Alfred 5 Script Filter workflows in Go.
 > Start shipping in 10 minutes.
@@ -123,7 +123,6 @@ This template is configured for AI-assisted development.
 |---|---|
 | Claude Code | Architecture, large-scale changes, refactoring |
 | GitHub Copilot | Bug fixes, small implementation, unit tests |
-| Gemini CLI | Documentation management |
 
 See [`AI_CONTEXT.md`](AI_CONTEXT.md) and [`CLAUDE.md`](CLAUDE.md) for session context.
 
